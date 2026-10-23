@@ -98,6 +98,7 @@
           <div id="miniHistoryRows" class="mini-history-rows"><p class="mini-empty">NO LOCAL SEARCH HISTORY</p></div>
           <p class="history-note">LOCAL HISTORY ONLY · STORED ON THIS DEVICE</p>
           <button id="miniClearHistoryBtn" type="button" class="mini-clear-btn">CLEAR HISTORY</button>
+          <button id="miniExportHistoryBtn" type="button" class="mini-export-btn">EXPORT HISTORY ↗</button>
         </aside>
       </section>
       <section class="content-section">
@@ -154,7 +155,15 @@
       </section>
 
       <section id="settingsSection" class="tool-panel privacy-panel">
-        <div class="section-heading"><div><div class="section-kicker">PRIVACY CENTER</div><h2 data-i18n="privacyTitle">আপনার ডেটা, আপনার নিয়ন্ত্রণে</h2></div></div>
+        <div class="section-heading"><div><div class="section-kicker">SETTINGS</div><h2 data-i18n="privacyTitle">SYSTEM PREFERENCES</h2></div></div>
+        <div class="settings-list" aria-label="System preferences">
+          <div class="preference-row"><span class="preference-symbol">◐</span><div class="preference-copy"><b>THEME</b><small>INTERFACE COLOR</small></div><button type="button" id="settingsThemeBtn" class="preference-select">MATRIX GREEN <span>●</span></button></div>
+          <div class="preference-row"><span class="preference-symbol">文</span><div class="preference-copy"><b>LANGUAGE</b><small>DISPLAY LANGUAGE</small></div><button type="button" id="settingsLanguageBtn" class="preference-select">বাংলা <span>↗</span></button></div>
+          <div class="preference-row"><span class="preference-symbol">♧</span><div class="preference-copy"><b>NOTIFICATIONS</b><small>NOT REQUIRED BY THIS WEBSITE</small></div><button type="button" class="preference-switch is-disabled" disabled aria-label="Notifications unavailable"><i></i></button></div>
+          <div class="preference-row"><span class="preference-symbol">♫</span><div class="preference-copy"><b>SOUND</b><small>NO SOUND FEATURES</small></div><button type="button" class="preference-switch is-disabled" disabled aria-label="Sound unavailable"><i></i></button></div>
+          <div class="preference-row"><span class="preference-symbol">〰</span><div class="preference-copy"><b>VIBRATION</b><small>NOT SUPPORTED IN THIS WEB APP</small></div><button type="button" class="preference-switch is-disabled" disabled aria-label="Vibration unavailable"><i></i></button></div>
+          <div class="preference-row"><span class="preference-symbol">◷</span><div class="preference-copy"><b>AUTO SAVE HISTORY</b><small id="autoSaveCaption">SAVE VALID LOOKUPS ON THIS DEVICE</small></div><button type="button" id="autoSaveBtn" class="preference-switch" aria-pressed="true" aria-label="Toggle auto save history"><i></i></button></div>
+        </div>
         <p class="panel-copy" data-i18n="privacyCopy">সার্চ হিস্ট্রি, রিপোর্ট ও পছন্দ এই ব্রাউজারের localStorage-এ থাকে। অন্য ডিভাইসে সিঙ্ক হয় না।</p>
         <div class="toolbar-wrap"><button id="backupBtn" class="secondary-btn" type="button" data-i18n="backup">সব ডেটার JSON ব্যাকআপ</button><label class="file-button" for="restoreFile" data-i18n="restore">JSON ব্যাকআপ রিস্টোর</label><input id="restoreFile" type="file" accept=".json,application/json" hidden><button id="clearAllBtn" class="danger-btn" type="button" data-i18n="clearAll">সব লোকাল ডেটা মুছুন</button></div>
         <p id="privacyMessage" class="small-note" role="status"></p>
