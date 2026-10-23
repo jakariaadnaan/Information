@@ -17,7 +17,7 @@
 <body>
   <div class="app-shell">
     <header class="topbar">
-      <a class="brand" href="./" aria-label="Number Lookup BD হোম"><span class="brand-mark">N</span><span><strong>Number Lookup</strong><small>BD · PHONE INSIGHTS</small></span></a>
+      <a class="brand" href="./" aria-label="Number Lookup BD হোম"><span class="brand-mark"><b>NL</b><small>BD</small></span><span><strong>NUMBER_LOOKUP BD</strong><small>TRACE · IDENTIFY · VERIFY</small></span></a>
       <div class="header-actions">
         <span class="status-pill"><i></i><span data-i18n="privacyDemo">Privacy-first</span></span>
         <button id="languageBtn" class="utility-btn" type="button" aria-label="Change language">EN</button>
@@ -47,10 +47,10 @@
         <div class="primary-column">
       <section class="hero">
         <div class="eyebrow"><span class="eyebrow-line"></span><span data-i18n="eyebrow">BANGLADESH NUMBER TOOLS</span></div>
-        <h1 class="lookup-title" data-i18n="headline">ENTER <span>MOBILE NUMBER</span></h1>
+        <h1 class="lookup-title" data-i18n="headline">NUMBER_LOOKUP <span>BD</span></h1>
         <p class="hero-copy" data-i18n="heroCopy">মোবাইল নম্বরের ফরম্যাট ও সম্ভাব্য অপারেটর-রেঞ্জ দেখুন। আপনার সার্চ হিস্ট্রি ও রিপোর্ট এই ব্রাউজারেই থাকে।</p>
         <div class="lookup-card">
-          <label for="phone" data-i18n="phoneLabel">বাংলাদেশের মোবাইল নম্বর</label>
+          <label for="phone" data-i18n="phoneLabel">ENTER MOBILE NUMBER</label>
           <div class="search-row"><div class="input-wrap"><span class="country-code">🇧🇩 +880</span><input id="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX বা +8801XXXXXXXXX" maxlength="24" aria-describedby="input-hint"></div><button id="lookupBtn" type="button"><span data-i18n="lookup">নম্বর যাচাই</span><span aria-hidden="true">↗</span></button></div>
           <div class="form-foot"><span id="input-hint" data-i18n="localHint">আপনার নম্বর সার্ভারে পাঠানো হচ্ছে না।</span><span class="secure-label">⌁ Local check</span></div>
           <p id="error" class="error" role="alert" hidden></p>
@@ -65,6 +65,14 @@
         <article class="metric-card"><span data-i18n="metricValid">সঠিক ফরম্যাট</span><strong id="metricValid">0</strong><small data-i18n="historyOnly">হিস্ট্রি থেকে গণনা</small></article>
       </section>
 
+      <section id="resultPreview" class="result-card result-preview" aria-label="Result preview">
+        <div class="result-heading"><div><div class="section-kicker">RESULT FOUND</div><h2>NUMBER INSIGHTS</h2></div><span class="result-badge preview-badge">AWAITING INPUT</span></div>
+        <div class="preview-number"><span class="preview-avatar">◎</span><div><small>FORMAT CHECK</small><strong>Enter a number to begin</strong><span>No subscriber data is retrieved</span></div></div>
+        <div class="extra-info-title">EXTRA INFORMATION <span>LOCAL CHECK ONLY</span></div>
+        <div class="result-grid"><div class="result-item"><span>NUMBER FORMAT</span><strong>—</strong></div><div class="result-item"><span>OPERATOR PREFIX</span><strong>—</strong></div><div class="result-item"><span>LOCAL REPORTS</span><strong>—</strong></div></div>
+        <p class="disclaimer">Validated format and prefix information will appear here after you submit a number. Subscriber identity and live location are not available.</p>
+      </section>
+
       <section id="result" class="result-card" hidden aria-live="polite">
         <div class="result-heading"><div><div class="section-kicker">RESULT FOUND</div><h2 data-i18n="resultTitle">নম্বর বিশ্লেষণ</h2></div><span id="validBadge" class="result-badge">ফরম্যাট সঠিক</span></div>
         <div class="result-number" id="formattedNumber"></div>
@@ -76,7 +84,7 @@
 
           <section id="locationMapPanel" class="map-panel unavailable" aria-label="Live location map unavailable">
             <div class="map-panel-head"><span>LOCATION MAP</span><span class="disabled-chip">UNAVAILABLE</span></div>
-            <div class="map-illustration" aria-hidden="true"><span class="map-road road-a"></span><span class="map-road road-b"></span><span class="map-road road-c"></span><span class="map-radar">◎</span><b>DHAKA · BANGLADESH</b></div>
+            <div class="map-illustration" aria-hidden="true"><span class="map-road road-a"></span><span class="map-road road-b"></span><span class="map-road road-c"></span><span class="map-radar">◎</span><b>LOCATION DATA UNAVAILABLE</b></div>
             <p>Live number location is not available. This panel is a visual placeholder; no location is being tracked.</p>
           </section>
         </div>
@@ -108,6 +116,7 @@
 <button type="button" class="tool-menu-item" data-tool-action="reports"><span class="tool-menu-icon">▤</span><span class="tool-menu-copy"><b>LOCAL REPORTS</b><small>View and manage reports saved on this device</small></span><span class="tool-menu-cta">OPEN ↗</span></button>
 <button type="button" class="tool-menu-item" data-tool-action="backup"><span class="tool-menu-icon">▣</span><span class="tool-menu-copy"><b>JSON BACKUP</b><small>Download your local data as JSON</small></span><span class="tool-menu-cta">BACKUP</span></button>
 <button type="button" class="tool-menu-item" data-tool-action="restore"><span class="tool-menu-icon">⤒</span><span class="tool-menu-copy"><b>RESTORE</b><small>Restore from a local backup file</small></span><span class="tool-menu-cta">RESTORE</span></button>
+<button type="button" class="tool-menu-item" data-tool-action="extra"><span class="tool-menu-icon">◈</span><span class="tool-menu-copy"><b>EXTRA INFORMATION</b><small>Show only the current result details</small></span><span class="tool-menu-cta">VIEW ↗</span></button>
 <button type="button" class="tool-menu-item" data-tool-action="map"><span class="tool-menu-icon">◎</span><span class="tool-menu-copy"><b>LOCATION MAP</b><small>Preview panel only — no live tracking</small></span><span class="tool-menu-cta">VIEW ↗</span></button>
 <button type="button" class="tool-menu-item" data-tool-action="reportform"><span class="tool-menu-icon">⚑</span><span class="tool-menu-copy"><b>SAVE SPAM REPORT</b><small>Save an unverified note on this device</small></span><span class="tool-menu-cta">OPEN ↗</span></button>
 <p class="tools-hub-note">NO SUBSCRIBER LOOKUP · NO LIVE LOCATION SERVICE</p></section>
