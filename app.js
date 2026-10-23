@@ -38,7 +38,8 @@
   function csvCell(value) { return '"' + String(value ?? "").replace(/"/g,'""') + '"'; }
   function exportCsv(name,rows) { const csv="\uFEFF"+rows.map(row=>row.map(csvCell).join(",")).join("\r\n"); download(name,csv,"text/csv"); }
   function saveHistory(item) { const arr=read(KEYS.history); arr.unshift(item); write(KEYS.history,arr.slice(0,100)); }
-  function lookup(raw, shouldSave=true) {\n    const terminal=$("terminalStatus"); if(terminal) terminal.textContent="SCANNING";
+  function lookup(raw, shouldSave=true) {
+    const terminal=$("terminalStatus"); if(terminal) terminal.textContent="SCANNING";
     const logAnalyze=$("logAnalyze"), logComplete=$("logComplete"), logInit=$("logInit"), logRules=$("logRules");
     if(logAnalyze) logAnalyze.textContent="> VALIDATING INPUT..."; if(logComplete) logComplete.textContent="> CHECKING LOCAL RULES...";
     const logBox=document.querySelector(".terminal-log"); if(logBox) logBox.classList.add("is-scanning");
@@ -108,7 +109,8 @@
   $("copyResultBtn").addEventListener("click",async()=>{if(!lastResult)return;const textOut=JSON.stringify({...lastResult,localReports:reportsFor(lastResult.number).length},null,2);try{await navigator.clipboard.writeText(textOut);$("resultNote").textContent=document.documentElement.lang==="en"?"Result copied to clipboard.":"ফলাফল কপি হয়েছে।";}catch(_){download("number-result.json",textOut);}});
   $("exportResultBtn").addEventListener("click",()=>{if(lastResult)download("number-result.json",JSON.stringify({...lastResult,localReports:reportsFor(lastResult.number).length},null,2));});
   $("reportForm").addEventListener("submit",e=>{e.preventDefault();const checked=validate($("reportPhone").value);if(!checked.valid){$("reportMessage").textContent=document.documentElement.lang==="en"?"Enter a valid Bangladesh mobile number.":"সঠিক বাংলাদেশি মোবাইল নম্বর দিন।";return;}const reports=read(KEYS.reports);reports.push({id:Date.now()+"-"+Math.random().toString(36).slice(2,7),number:checked.number,type:$("reportType").value,details:$("reportDetails").value.trim().slice(0,240),createdAt:new Date().toISOString()});try{write(KEYS.reports,reports.slice(-500));$("reportMessage").textContent=document.documentElement.lang==="en"?"Saved only in this browser; not publicly shared.":"রিপোর্ট শুধু এই ব্রাউজারে সংরক্ষিত হয়েছে; পাবলিক নয়।";$("reportForm").reset();renderAll();}catch(_){$("reportMessage").textContent="ব্রাউজার স্টোরেজে সংরক্ষণ করা যায়নি।";}});
-  $("historyFilter").addEventListener("input",renderHistory);$("reportFilter").addEventListener("input",renderReports);\n  $("miniHistoryFilter").addEventListener("input",renderMiniHistory);
+  $("historyFilter").addEventListener("input",renderHistory);$("reportFilter").addEventListener("input",renderReports);
+  $("miniHistoryFilter").addEventListener("input",renderMiniHistory);
   document.querySelectorAll("[data-mini-period]").forEach(btn=>btn.addEventListener("click",()=>{miniPeriod=btn.dataset.miniPeriod;document.querySelectorAll("[data-mini-period]").forEach(b=>b.classList.toggle("active",b===btn));renderMiniHistory();}));
   $("miniClearHistoryBtn").addEventListener("click",()=>{if(askConfirm("সার্চ হিস্ট্রি মুছে ফেলবেন?")){write(KEYS.history,[]);renderAll();}});
   $("historyRows").addEventListener("click",e=>{const lookupBtn=e.target.closest("[data-history-lookup]"),del=e.target.closest("[data-history-delete]");if(lookupBtn){$("phone").value=lookupBtn.dataset.historyLookup;lookup($("phone").value,false);$("result").scrollIntoView({behavior:"smooth",block:"nearest"});}if(del){const list=read(KEYS.history);list.splice(Number(del.dataset.historyDelete),1);write(KEYS.history,list);renderAll();}});
