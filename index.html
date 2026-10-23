@@ -78,19 +78,35 @@
       <section id="resultPreview" class="result-card result-preview" aria-label="Result preview">
         <div class="result-heading"><div><div class="section-kicker">RESULT FOUND</div><h2>NUMBER INSIGHTS</h2></div><span class="result-badge preview-badge">AWAITING INPUT</span></div>
         <div class="preview-number"><span class="preview-avatar">◎</span><div><small>FORMAT CHECK</small><strong>Enter a number to begin</strong><span>No subscriber data is retrieved</span></div></div>
-        <div class="extra-info-title">EXTRA INFORMATION <span>LOCAL CHECK ONLY</span></div>
-        <div class="result-grid"><div class="result-item"><span>NUMBER FORMAT</span><strong>—</strong></div><div class="result-item"><span>OPERATOR PREFIX</span><strong>—</strong></div><div class="result-item"><span>LOCAL REPORTS</span><strong>—</strong></div></div>
-        <p class="disclaimer">Validated format and prefix information will appear here after you submit a number. Subscriber identity and live location are not available.</p>
+        <div class="result-grid preview-result-grid">
+          <div class="result-item"><span>OPERATOR RANGE</span><strong>—</strong></div>
+          <div class="result-item"><span>NUMBER TYPE</span><strong>—</strong></div>
+          <div class="result-item"><span>COUNTRY</span><strong>BANGLADESH</strong></div>
+          <div class="result-item"><span>VERIFICATION STATUS</span><strong>AWAITING INPUT</strong></div>
+        </div>
+        <p class="disclaimer">This screen shows format and prefix information only after a number is checked. Subscriber identity is not queried.</p>
       </section>
 
       <section id="result" class="result-card" hidden aria-live="polite">
         <div class="result-heading"><div><div class="section-kicker">RESULT FOUND</div><h2 data-i18n="resultTitle">নম্বর বিশ্লেষণ</h2></div><span id="validBadge" class="result-badge">ফরম্যাট সঠিক</span></div>
         <div class="result-number" id="formattedNumber"></div>
-        <div class="extra-info-title">EXTRA INFORMATION <span>LOCAL DATA</span></div><div class="result-grid"><div class="result-item"><span data-i18n="format">ফরম্যাট</span><strong id="formatValue">—</strong></div><div class="result-item"><span data-i18n="operator">সম্ভাব্য রেঞ্জ</span><strong id="operatorValue">—</strong></div><div class="result-item"><span data-i18n="spamReports">লোকাল স্প্যাম রিপোর্ট</span><strong id="spamValue">—</strong></div></div>
+        <div class="extra-info-title">LOCAL FORMAT RESULT <span>NO LIVE DATABASE</span></div><div class="result-grid"><div class="result-item"><span data-i18n="format">ফরম্যাট</span><strong id="formatValue">—</strong></div><div class="result-item"><span data-i18n="operator">সম্ভাব্য রেঞ্জ</span><strong id="operatorValue">—</strong></div><div class="result-item"><span data-i18n="spamReports">লোকাল স্প্যাম রিপোর্ট</span><strong id="spamValue">—</strong></div></div>
         <p class="disclaimer" id="resultNote"></p>
         <div class="inline-actions"><button id="copyResultBtn" class="secondary-btn" type="button" data-i18n="copyResult">ফলাফল কপি</button><button id="exportResultBtn" class="secondary-btn" type="button" data-i18n="exportResult">JSON ডাউনলোড</button></div>
       </section>
 
+
+          <section id="extraInformationPanel" class="extra-info-panel" aria-label="Extra information">
+            <div class="extra-panel-heading"><div><div class="section-kicker">EXTRA INFORMATION</div><h2>ADDITIONAL DATA</h2></div><span class="disabled-chip">UNAVAILABLE</span></div>
+            <div class="extra-data-list">
+              <div class="extra-data-row unavailable"><span>› POSSIBLE LOCATION</span><b>NOT AVAILABLE</b></div>
+              <div class="extra-data-row unavailable"><span>› LINE STATUS</span><b>NOT AVAILABLE</b></div>
+              <div class="extra-data-row unavailable"><span>› CONNECTION TYPE</span><b>NOT AVAILABLE</b></div>
+              <div class="extra-data-row unavailable"><span>› SIM TYPE</span><b>NOT AVAILABLE</b></div>
+              <div class="extra-data-row unavailable"><span>› LAST SEEN</span><b>NOT AVAILABLE</b></div>
+            </div>
+            <p>These details require verified, authorized data sources. This app does not guess, track, or retrieve private subscriber information.</p>
+          </section>
 
           <section id="locationMapPanel" class="map-panel unavailable" aria-label="Live location map unavailable">
             <div class="map-panel-head"><span>LOCATION MAP</span><span class="disabled-chip">UNAVAILABLE</span></div>
