@@ -109,6 +109,7 @@
   function applyTheme(theme) { document.documentElement.dataset.theme=theme;localStorage.setItem(KEYS.theme,theme);$("themeBtn").textContent=theme==="dark"?"☼":"☾"; }
   function askConfirm(message) { return window.confirm(message); }
 
+  document.querySelectorAll("[data-nav-target]").forEach(link=>link.addEventListener("click",()=>{document.querySelectorAll("[data-nav-target]").forEach(item=>item.classList.toggle("active",item===link));}));
   $("lookupBtn").addEventListener("click",()=>lookup($("phone").value));
   $("phone").addEventListener("keydown",e=>{if(e.key==="Enter")lookup($("phone").value);});
   $("copyResultBtn").addEventListener("click",async()=>{if(!lastResult)return;const textOut=JSON.stringify({...lastResult,localReports:reportsFor(lastResult.number).length},null,2);try{await navigator.clipboard.writeText(textOut);$("resultNote").textContent=document.documentElement.lang==="en"?"Result copied to clipboard.":"ফলাফল কপি হয়েছে।";}catch(_){download("number-result.json",textOut);}});
