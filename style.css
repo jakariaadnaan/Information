@@ -278,3 +278,75 @@ html{scroll-padding-top:14px}
  body[data-active-view] #reportsManagement .section-heading{align-items:center}
  .back-to-tools{display:inline-flex!important;align-items:center}
 }
+
+
+/* Visual fidelity pass: logo lockup, compact lookup header, result preview */
+.brand-mark{clip-path:polygon(25% 0,75% 0,100% 25%,100% 75%,75% 100%,25% 100%,0 75%,0 25%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;font-size:0;line-height:1}
+.brand-mark b{display:block;color:#00ff88;font-size:17px;letter-spacing:-.08em;line-height:1}
+.brand-mark small{display:block!important;color:#00ff88!important;font-size:5px!important;letter-spacing:.18em!important;line-height:1.1;margin:2px 0 0!important}
+.result-preview{border-color:#17613c;background:linear-gradient(135deg,#06140c,#020805);box-shadow:inset 0 0 26px #00ff8806,0 12px 32px #0006}
+.preview-badge{color:#77a88a;border-color:#244c35;background:#06140c}
+.preview-number{display:flex;align-items:center;gap:12px;margin:17px 0;padding:13px;border:1px solid #12452e;background:#020805}
+.preview-avatar{display:grid;place-items:center;flex:none;width:68px;height:78px;border:1px solid #17613c;color:#00ff88;font-size:36px;background:radial-gradient(ellipse,#0b3b22 0%,#020805 75%);text-shadow:0 0 18px #00ff88}
+.preview-number small,.preview-number strong,.preview-number span{display:block}
+.preview-number small{font-size:8px;letter-spacing:.12em;color:#00ff88}
+.preview-number strong{font-size:12px;color:#d9ffe9;line-height:1.5;margin:3px 0}
+.preview-number div>span{font-size:8px;color:#6c9d81}
+.map-panel.unavailable{opacity:1;filter:none;border-color:#173d29}
+.map-panel.unavailable .map-illustration{background:radial-gradient(ellipse at 55% 50%,#0c2b1a,#030906 70%)}
+.map-panel.unavailable .map-illustration b{color:#6c9d81;font-size:7px}
+@media(min-width:701px){
+ .brand-mark{width:43px;height:43px}
+ .primary-column .lookup-title{font-size:clamp(17px,1.7vw,22px)!important;letter-spacing:.04em!important;margin:12px 0}
+ .primary-column .lookup-title span{display:inline!important;margin:0}
+ .primary-column .hero-copy{font-size:10px;margin-bottom:14px}
+ .primary-column .lookup-card{padding:15px}
+ .primary-column .lookup-card label{font-size:9px}
+ .primary-column .result-preview .result-grid{grid-template-columns:1fr}
+ .primary-column .preview-number{padding:10px}
+}
+@media(max-width:700px){
+ .topbar{gap:6px!important;min-height:64px!important}
+ .brand{gap:8px;min-width:0}
+ .brand-mark{width:37px;height:40px;flex:none}
+ .brand strong{font-size:9px!important;letter-spacing:.035em}
+ .brand small:not(.brand-mark small){font-size:6px!important;letter-spacing:.10em!important;white-space:nowrap}
+ .header-actions{gap:4px!important;flex:none}
+ .utility-btn{padding:6px 7px!important;font-size:9px!important}
+ body[data-active-view="lookup"] #lookupSection .primary-column .eyebrow,
+ body[data-active-view="lookup"] #lookupSection .primary-column .hero-copy{display:none!important}
+ body[data-active-view="lookup"] #lookupSection .primary-column .lookup-title{display:block!important;font-size:15px!important;line-height:1.35!important;letter-spacing:.06em!important;margin:13px 0 10px;text-align:left}
+ body[data-active-view="lookup"] #lookupSection .primary-column .lookup-title span{display:inline!important;margin:0}
+ body[data-active-view="lookup"] #lookupSection .primary-column .lookup-card label{font-size:9px;letter-spacing:.09em}
+ body[data-active-view="lookup"] #lookupSection .primary-column>.dashboard-grid{display:none!important}
+ body[data-active-view="lookup"] #lookupSection .primary-column>#resultPreview{display:block;margin:12px 0;padding:13px}
+ body[data-active-view="lookup"] #lookupSection .primary-column>#resultPreview .result-heading h2{font-size:16px}
+ body[data-active-view="lookup"] #lookupSection .primary-column>#resultPreview .result-number{font-size:19px}
+ body[data-active-view="lookup"] #lookupSection .primary-column>#resultPreview .preview-number{padding:10px;gap:10px;margin:13px 0}
+ body[data-active-view="lookup"] #lookupSection .primary-column>#resultPreview .preview-avatar{width:53px;height:63px;font-size:29px}
+ body[data-active-view="lookup"] #lookupSection .primary-column>#resultPreview .result-grid,
+ body[data-active-view="lookup"] #lookupSection .primary-column>#result .result-grid{grid-template-columns:1fr;gap:6px}
+ body[data-active-view="lookup"] #lookupSection .primary-column>#resultPreview .result-item,
+ body[data-active-view="lookup"] #lookupSection .primary-column>#result .result-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px}
+ body[data-active-view="lookup"] #lookupSection .primary-column>#resultPreview .result-item span,
+ body[data-active-view="lookup"] #lookupSection .primary-column>#result .result-item span{margin:0;font-size:8px}
+ body[data-active-view="lookup"] #lookupSection .primary-column>#resultPreview .result-item strong,
+ body[data-active-view="lookup"] #lookupSection .primary-column>#result .result-item strong{font-size:9px;text-align:right}
+ body[data-active-view="lookup"] #lookupSection .primary-column>#resultPreview .extra-info-title,
+ body[data-active-view="lookup"] #lookupSection .primary-column>#result .extra-info-title{margin:13px 0 7px}
+ body[data-active-view="lookup"] #lookupSection .primary-column>#resultPreview .disclaimer,
+ body[data-active-view="lookup"] #lookupSection .primary-column>#result .disclaimer{font-size:8px;line-height:1.6}
+ body[data-active-view="lookup"][data-lookup-panel="extra"] #lookupSection .primary-column>.hero,
+ body[data-active-view="lookup"][data-lookup-panel="extra"] #lookupSection .primary-column>.dashboard-grid,
+ body[data-active-view="lookup"][data-lookup-panel="extra"] #lookupSection .primary-column>.map-panel{display:none!important}
+ body[data-active-view="lookup"][data-lookup-panel="extra"] #lookupSection .primary-column>#resultPreview,
+ body[data-active-view="lookup"][data-lookup-panel="extra"] #lookupSection .primary-column>#result{display:block}
+ body[data-active-view="tools"][data-tools-panel="batchResults"] #toolsSection .back-to-tools{display:inline-flex!important}
+ body[data-active-view="tools"][data-tools-panel="batchResults"] #toolsSection>.section-heading,
+ body[data-active-view="tools"][data-tools-panel="batchResults"] #toolsSection>.panel-copy,
+ body[data-active-view="tools"][data-tools-panel="batchResults"] #toolsSection>textarea,
+ body[data-active-view="tools"][data-tools-panel="batchResults"] #toolsSection .toolbar-wrap .file-button,
+ body[data-active-view="tools"][data-tools-panel="batchResults"] #toolsSection #batchRunBtn{display:none!important}
+ body[data-active-view="tools"][data-tools-panel="batchResults"] #toolsSection .table-scroll{display:block!important}
+ body[data-active-view="tools"][data-tools-panel="batchResults"] #toolsSection #batchExportBtn{display:inline-flex!important}
+}
