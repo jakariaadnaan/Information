@@ -19,7 +19,7 @@
   }
   function validate(raw) {
     const number = normalize(raw), valid = /^01[3-9]\d{8}$/.test(number);
-    return {number, valid, formatted: valid ? "+880 " + number.slice(1,5) + "-" + number.slice(5,8) + "-" + number.slice(8)};
+    return {number, valid, formatted: valid ? "+880 " + number.slice(1,5) + "-" + number.slice(5,8) + "-" + number.slice(8) : ""};
   }
   function rangeInfo(number) {
     const p = number.slice(0,3);
