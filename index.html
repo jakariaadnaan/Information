@@ -127,7 +127,8 @@
         <textarea id="batchInput" rows="4" placeholder="017XXXXXXXX&#10;+88018XXXXXXXX"></textarea>
         <div class="toolbar-wrap"><label class="file-button" for="batchFile" data-i18n="importFile">TXT/CSV ইমপোর্ট</label><input id="batchFile" type="file" accept=".txt,.csv,text/plain,text/csv" hidden><button id="batchRunBtn" class="secondary-btn" type="button" data-i18n="runBatch">সব নম্বর যাচাই</button><button id="batchExportBtn" class="secondary-btn" type="button" disabled data-i18n="exportCsv">CSV এক্সপোর্ট</button></div>
         <p id="batchMessage" class="small-note" role="status"></p>
-        <div class="table-scroll"><table><thead><tr><th data-i18n="thNumber">নম্বর</th><th data-i18n="thFormat">ফরম্যাট</th><th data-i18n="thOperator">সম্ভাব্য রেঞ্জ</th></tr></thead><tbody id="batchResults"><tr><td colspan="3" class="empty-cell" data-i18n="batchEmpty">এখনও কোনো ব্যাচ চালানো হয়নি।</td></tr></tbody></table></div>
+        <div id="batchResultsHeading" class="batch-results-heading"><div class="section-kicker">BATCH RESULTS</div><h2>VALIDATION REPORT</h2><div class="batch-summary"><span><b id="batchTotalCount">0</b><small>TOTAL</small></span><span><b id="batchValidCount">0</b><small>VALID</small></span><span><b id="batchInvalidCount">0</b><small>INVALID</small></span></div><button type="button" class="secondary-btn" data-new-batch>NEW SEARCH ↗</button></div>
+        <div class="table-scroll"><table><thead><tr><th data-i18n="thNumber">নম্বর</th><th data-i18n="thOperator">সম্ভাব্য রেঞ্জ</th><th data-i18n="thStatus">স্ট্যাটাস</th></tr></thead><tbody id="batchResults"><tr><td colspan="3" class="empty-cell" data-i18n="batchEmpty">এখনও কোনো ব্যাচ চালানো হয়নি।</td></tr></tbody></table></div>
       </section>
 
       <section id="historySection" class="tool-panel">
