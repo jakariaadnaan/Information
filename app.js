@@ -39,16 +39,21 @@
   function exportCsv(name,rows) { const csv="\uFEFF"+rows.map(row=>row.map(csvCell).join(",")).join("\r\n"); download(name,csv,"text/csv"); }
   function saveHistory(item) { const arr=read(KEYS.history); arr.unshift(item); write(KEYS.history,arr.slice(0,100)); }
   function lookup(raw, shouldSave=true) {
-    const terminal=$("terminalStatus"); if(terminal) terminal.textContent="SCANNING";
+    const terminal=$("terminalStatus"), scanState=$("scanState"), scanCaption=$("scanCaption"), scanProgress=document.querySelector(".scan-progress");
     const logAnalyze=$("logAnalyze"), logComplete=$("logComplete"), logInit=$("logInit"), logRules=$("logRules");
+    if(terminal) terminal.textContent="SCANNING";
+    if(scanState){scanState.textContent="SCANNING";scanState.classList.remove("complete");}
+    if(scanCaption)scanCaption.textContent="VALIDATING NUMBER FORMAT...";
+    if(scanProgress){scanProgress.classList.add("is-scanning");scanProgress.classList.remove("is-complete");}
+    const logBox=document.querySelector(".terminal-log");
     if(logAnalyze) logAnalyze.textContent="> VALIDATING INPUT..."; if(logComplete) logComplete.textContent="> CHECKING LOCAL RULES...";
-    const logBox=document.querySelector(".terminal-log"); if(logBox) logBox.classList.add("is-scanning");
+    if(logBox) logBox.classList.add("is-scanning");
     const checked=validate(raw), error=$("error");
     error.hidden=true;
-    if (!String(raw||"").trim()) { if(terminal)terminal.textContent="WAITING";if(logBox)logBox.classList.remove("is-scanning");error.textContent=document.documentElement.lang==="en"?"Enter a mobile number first.":"প্রথমে একটি মোবাইল নম্বর লিখুন।";error.hidden=false;$("result").hidden=true;return null; }
-    if (!checked.valid) { if(terminal)terminal.textContent="INVALID INPUT";if(logBox)logBox.classList.remove("is-scanning");if(logAnalyze)logAnalyze.textContent="> FORMAT CHECK FAILED";error.textContent=document.documentElement.lang==="en"?"Enter a valid Bangladesh mobile number, e.g. 01712345678.":"সঠিক বাংলাদেশি মোবাইল নম্বর দিন। উদাহরণ: 01712345678 বা +8801712345678";error.hidden=false;$("result").hidden=true;return null; }
+    if (!String(raw||"").trim()) { if(terminal)terminal.textContent="WAITING";if(scanState)scanState.textContent="STANDBY";if(scanCaption)scanCaption.textContent="READY FOR INPUT · LOCAL SCAN ONLY";if(scanProgress){scanProgress.classList.remove("is-scanning","is-complete");}if(logBox)logBox.classList.remove("is-scanning");error.textContent=document.documentElement.lang==="en"?"Enter a mobile number first.":"প্রথমে একটি মোবাইল নম্বর লিখুন।";error.hidden=false;$("result").hidden=true;return null; }
+    if (!checked.valid) { if(terminal)terminal.textContent="INVALID INPUT";if(scanState)scanState.textContent="INVALID";if(scanCaption)scanCaption.textContent="FORMAT CHECK FAILED · TRY AGAIN";if(scanProgress){scanProgress.classList.remove("is-scanning","is-complete");}if(logBox)logBox.classList.remove("is-scanning");if(logAnalyze)logAnalyze.textContent="> FORMAT CHECK FAILED";error.textContent=document.documentElement.lang==="en"?"Enter a valid Bangladesh mobile number, e.g. 01712345678.":"সঠিক বাংলাদেশি মোবাইল নম্বর দিন। উদাহরণ: 01712345678 বা +8801712345678";error.hidden=false;$("result").hidden=true;return null; }
     const item={number:checked.number,formatted:checked.formatted,valid:true,operator:rangeInfo(checked.number),createdAt:new Date().toISOString()};
-    lastResult=item; if(terminal)terminal.textContent="COMPLETE";if(logBox)logBox.classList.remove("is-scanning");if(logInit)logInit.textContent="> INPUT RECEIVED";if(logRules)logRules.textContent="> PREFIX RULES LOADED";if(logAnalyze)logAnalyze.textContent="> FORMAT: VALID";if(logComplete)logComplete.textContent="> LIVE DATA NOT QUERIED";
+    lastResult=item; if(terminal)terminal.textContent="COMPLETE";if(scanState){scanState.textContent="RESULT FOUND";scanState.classList.add("complete");}if(scanCaption)scanCaption.textContent="LOCAL FORMAT SCAN COMPLETE";if(scanProgress){scanProgress.classList.remove("is-scanning");scanProgress.classList.add("is-complete");}if(logBox)logBox.classList.remove("is-scanning");if(logInit)logInit.textContent="> INPUT RECEIVED";if(logRules)logRules.textContent="> PREFIX RULES LOADED";if(logAnalyze)logAnalyze.textContent="> FORMAT: VALID";if(logComplete)logComplete.textContent="> LIVE DATA NOT QUERIED";
     $("formattedNumber").textContent=item.formatted;$("validBadge").textContent=document.documentElement.lang==="en"?"Valid format":"ফরম্যাট সঠিক";
     $("formatValue").textContent=document.documentElement.lang==="en"?"Bangladesh mobile · valid structure":"বাংলাদেশি মোবাইল · বৈধ গঠন";
     $("operatorValue").textContent=item.operator;
