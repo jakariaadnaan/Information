@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1220">
+  <meta name="description" content="বাংলাদেশের মোবাইল নম্বর ফরম্যাট যাচাই ও কমিউনিটি স্প্যাম রিপোর্ট ডেমো।">
+  <title>Number Lookup BD — মোবাইল নম্বর যাচাই</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Number Lookup BD হোম">
+        <span class="brand-mark">N</span>
+        <span><strong>Number Lookup</strong><small>BD · PHONE INSIGHTS</small></span>
+      </a>
+      <span class="status-pill"><i></i> Privacy-first demo</span>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="eyebrow"><span class="eyebrow-line"></span> BANGLADESH NUMBER TOOLS</div>
+        <h1>নম্বরটি <span>যাচাই করুন।</span></h1>
+        <p class="hero-copy">মোবাইল নম্বরের ফরম্যাট ও সম্ভাব্য অপারেটর-রেঞ্জ দেখুন। পাবলিক তথ্য ও স্প্যাম রিপোর্টের জন্য তৈরি একটি স্বচ্ছ, প্রাইভেসি-ফার্স্ট প্রাথমিক সংস্করণ।</p>
+        <div class="lookup-card">
+          <label for="phone">বাংলাদেশের মোবাইল নম্বর</label>
+          <div class="search-row">
+            <div class="input-wrap"><span class="country-code">🇧🇩 +880</span><input id="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX বা +8801XXXXXXXXX" maxlength="20" aria-describedby="input-hint"></div>
+            <button id="lookupBtn" type="button"><span>নম্বর যাচাই</span><span aria-hidden="true">↗</span></button>
+          </div>
+          <div class="form-foot"><span id="input-hint">আপনার নম্বর সার্ভারে পাঠানো হচ্ছে না।</span><span class="secure-label">⌁ Local check</span></div>
+          <p id="error" class="error" role="alert" hidden></p>
+        </div>
+        <div class="trust-row"><span>✓ ফরম্যাট যাচাই</span><span>✓ কোনো NID/মালিকের নাম নয়</span><span>✓ ব্রাউজারেই প্রাথমিক পরীক্ষা</span></div>
+      </section>
+
+      <section id="result" class="result-card" hidden aria-live="polite">
+        <div class="result-heading"><div><div class="section-kicker">LOOKUP RESULT</div><h2>নম্বর বিশ্লেষণ</h2></div><span id="validBadge" class="result-badge">যাচাই করা হচ্ছে</span></div>
+        <div class="result-number" id="formattedNumber"></div>
+        <div class="result-grid">
+          <div class="result-item"><span>ফরম্যাট</span><strong id="formatValue">—</strong></div>
+          <div class="result-item"><span>সম্ভাব্য রেঞ্জ</span><strong id="operatorValue">—</strong></div>
+          <div class="result-item"><span>স্প্যাম রিপোর্ট</span><strong id="spamValue">কোনো লোকাল রিপোর্ট নেই</strong></div>
+        </div>
+        <p class="disclaimer" id="resultNote"></p>
+      </section>
+
+      <section class="content-section">
+        <div class="section-heading"><div><div class="section-kicker">WHAT YOU CAN CHECK</div><h2>কী তথ্য পাওয়া যাবে?</h2></div><span class="section-count">01 — 03</span></div>
+        <div class="feature-grid">
+          <article class="feature-card"><span class="feature-icon blue">⌕</span><h3>নম্বর ফরম্যাট</h3><p>বাংলাদেশি মোবাইল নম্বরের গঠন ও দৈর্ঘ্য প্রাথমিকভাবে যাচাই।</p><span class="feature-tag">AVAILABLE · LOCAL</span></article>
+          <article class="feature-card"><span class="feature-icon violet">◉</span><h3>সম্ভাব্য অপারেটর রেঞ্জ</h3><p>প্রিফিক্সভিত্তিক আনুমানিক তথ্য। নম্বর পোর্ট করা থাকলে অপারেটর ভিন্ন হতে পারে।</p><span class="feature-tag">PREFIX ESTIMATE</span></article>
+          <article class="feature-card"><span class="feature-icon orange">⚑</span><h3>স্প্যাম রিপোর্ট</h3><p>এই ডেমোতে রিপোর্ট আপনার বর্তমান ব্রাউজারে সংরক্ষিত হবে; সবার জন্য প্রকাশিত হবে না।</p><span class="feature-tag">LOCAL DEMO ONLY</span></article>
+        </div>
+      </section>
+
+      <section class="report-section">
+        <div class="report-copy"><div class="section-kicker">COMMUNITY SAFETY</div><h2>সন্দেহজনক কল পেয়েছেন?</h2><p>নিজের অভিজ্ঞতা লোকালি নোট করুন। যাচাই ছাড়া কাউকে প্রতারক হিসেবে চিহ্নিত করবেন না।</p></div>
+        <form id="reportForm" class="report-form">
+          <label for="reportPhone">মোবাইল নম্বর</label>
+          <input id="reportPhone" type="tel" inputmode="tel" placeholder="01XXXXXXXXX" required>
+          <label for="reportType">রিপোর্টের ধরন</label>
+          <select id="reportType" required><option value="">একটি বেছে নিন</option><option>অযাচিত প্রচারণামূলক কল</option><option>সন্দেহজনক লিংক বা SMS</option><option>সম্ভাব্য প্রতারণার চেষ্টা</option><option>বারবার বিরক্তিকর কল</option></select>
+          <label for="reportDetails">সংক্ষিপ্ত বিবরণ <span>(ঐচ্ছিক)</span></label>
+          <textarea id="reportDetails" rows="3" maxlength="240" placeholder="ব্যক্তিগত তথ্য লিখবেন না"></textarea>
+          <button class="secondary-btn" type="submit">ব্রাউজারে রিপোর্ট সংরক্ষণ করুন</button>
+          <p id="reportMessage" class="small-note" role="status">রিপোর্ট শুধু এই ডিভাইস/ব্রাউজারে থাকবে।</p>
+        </form>
+      </section>
+
+      <section class="notice"><span class="notice-icon">i</span><div><strong>গুরুত্বপূর্ণ সীমাবদ্ধতা</strong><p>এই সংস্করণ কোনো ব্যক্তির নাম, NID, SIM নিবন্ধন, কল/SMS ইতিহাস, অবস্থান বা লাইভ অপারেটর শনাক্ত করে না। এখনো কোনো পাবলিক ডেটাবেস বা লাইভ স্প্যাম API সংযুক্ত নেই। লোকাল রিপোর্ট অন্য ব্যবহারকারীদের কাছে যায় না।</p></div></section>
+    </main>
+    <footer><div class="footer-brand">Number Lookup BD</div><p>তথ্যভিত্তিক ব্যবহার করুন · ব্যক্তিগত গোপনীয়তাকে সম্মান করুন</p><div class="footer-links"><a href="https://btrc.gov.bd/" target="_blank" rel="noopener noreferrer">BTRC ↗</a><a href="https://www.itu.int/" target="_blank" rel="noopener noreferrer">ITU ↗</a><a href="https://github.com/jakariaadnaan/Information" target="_blank" rel="noopener noreferrer">Source code ↗</a></div></footer>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
