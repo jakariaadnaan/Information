@@ -38,13 +38,13 @@
   function csvCell(value) { return '"' + String(value ?? "").replace(/"/g,'""') + '"'; }
   function exportCsv(name,rows) { const csv="\uFEFF"+rows.map(row=>row.map(csvCell).join(",")).join("\r\n"); download(name,csv,"text/csv"); }
   function saveHistory(item) { const arr=read(KEYS.history); arr.unshift(item); write(KEYS.history,arr.slice(0,100)); }
-  function lookup(raw, shouldSave=true) {
+  function lookup(raw, shouldSave=true) {\n    const terminal=$("terminalStatus"); if(terminal) terminal.textContent="SCANNING";\n    const logAnalyze=$("logAnalyze"), logComplete=$("logComplete"), logInit=$("logInit"), logRules=$("logRules");\n    if(logAnalyze) logAnalyze.textContent="> VALIDATING INPUT..."; if(logComplete) logComplete.textContent="> CHECKING LOCAL RULES...";\n    const logBox=document.querySelector(".terminal-log"); if(logBox) logBox.classList.add("is-scanning");
     const checked=validate(raw), error=$("error");
     error.hidden=true;
-    if (!String(raw||"").trim()) { error.textContent=document.documentElement.lang==="en"?"Enter a mobile number first.":"প্রথমে একটি মোবাইল নম্বর লিখুন।";error.hidden=false;$("result").hidden=true;return null; }
-    if (!checked.valid) { error.textContent=document.documentElement.lang==="en"?"Enter a valid Bangladesh mobile number, e.g. 01712345678.":"সঠিক বাংলাদেশি মোবাইল নম্বর দিন। উদাহরণ: 01712345678 বা +8801712345678";error.hidden=false;$("result").hidden=true;return null; }
+    if (!String(raw||"").trim()) { if(terminal)terminal.textContent="WAITING";if(logBox)logBox.classList.remove("is-scanning");error.textContent=document.documentElement.lang==="en"?"Enter a mobile number first.":"প্রথমে একটি মোবাইল নম্বর লিখুন।";error.hidden=false;$("result").hidden=true;return null; }
+    if (!checked.valid) { if(terminal)terminal.textContent="INVALID INPUT";if(logBox)logBox.classList.remove("is-scanning");if(logAnalyze)logAnalyze.textContent="> FORMAT CHECK FAILED";error.textContent=document.documentElement.lang==="en"?"Enter a valid Bangladesh mobile number, e.g. 01712345678.":"সঠিক বাংলাদেশি মোবাইল নম্বর দিন। উদাহরণ: 01712345678 বা +8801712345678";error.hidden=false;$("result").hidden=true;return null; }
     const item={number:checked.number,formatted:checked.formatted,valid:true,operator:rangeInfo(checked.number),createdAt:new Date().toISOString()};
-    lastResult=item;
+    lastResult=item; if(terminal)terminal.textContent="COMPLETE";if(logBox)logBox.classList.remove("is-scanning");if(logInit)logInit.textContent="> INPUT RECEIVED";if(logRules)logRules.textContent="> PREFIX RULES LOADED";if(logAnalyze)logAnalyze.textContent="> FORMAT: VALID";if(logComplete)logComplete.textContent="> LIVE DATA NOT QUERIED";
     $("formattedNumber").textContent=item.formatted;$("validBadge").textContent=document.documentElement.lang==="en"?"Valid format":"ফরম্যাট সঠিক";
     $("formatValue").textContent=document.documentElement.lang==="en"?"Bangladesh mobile · valid structure":"বাংলাদেশি মোবাইল · বৈধ গঠন";
     $("operatorValue").textContent=item.operator;
@@ -63,10 +63,23 @@
     const rows=all.map((x,i)=>({...x,_index:i})).filter(x=>!filter||(numberFilter && (x.number||"").includes(numberFilter))||(x.type||"").toLowerCase().includes(filter)||(x.details||"").toLowerCase().includes(filter));
     $("reportRows").innerHTML=rows.length?rows.map(x=>'<tr><td>'+safeText(x.number)+'</td><td>'+safeText(x.type)+'</td><td>'+safeText(dateLabel(x.createdAt))+'</td><td><button class="table-action" data-report-delete="'+x._index+'">'+(document.documentElement.lang==="en"?"Delete":"মুছুন")+'</button></td></tr>').join(""):'<tr><td colspan="4" class="empty-cell">'+(document.documentElement.lang==="en"?"No matching reports.":"কোনো রিপোর্ট নেই।")+'</td></tr>';
   }
+  let miniPeriod = "all";
+  function renderMiniHistory() {
+    const target=$("miniHistoryRows");
+    if(!target) return;
+    const q=normalize($("miniHistoryFilter").value);
+    const now=Date.now(), dayStart=new Date(); dayStart.setHours(0,0,0,0);
+    const list=read(KEYS.history).filter(x=>{
+      const ts=Date.parse(x.createdAt||"");
+      const periodOk=miniPeriod==="today" ? ts>=dayStart.getTime() : miniPeriod==="week" ? ts>=now-7*24*60*60*1000 : true;
+      return periodOk && (!q || String(x.number||"").includes(q));
+    }).slice(0,8);
+    target.innerHTML=list.length?list.map(x=>'<article class="mini-history-entry"><span>◉</span><div><b>'+safeText(x.formatted||x.number)+'</b><small>'+safeText(x.operator||"Format check")+'</small><time>'+safeText(dateLabel(x.createdAt))+'</time></div></article>').join(""):'<p class="mini-empty">NO MATCHING LOCAL HISTORY</p>';
+  }
   function renderAll() {
     const history=read(KEYS.history), reports=read(KEYS.reports);
     $("metricSearches").textContent=history.length;$("metricReports").textContent=reports.length;$("metricValid").textContent=history.filter(x=>x.valid).length;
-    renderHistory();renderReports();
+    renderHistory();renderReports();renderMiniHistory();
   }
   function runBatch(values) {
     const unique=values.map(v=>String(v).trim()).filter(Boolean).slice(0,500);
@@ -92,7 +105,7 @@
   $("copyResultBtn").addEventListener("click",async()=>{if(!lastResult)return;const textOut=JSON.stringify({...lastResult,localReports:reportsFor(lastResult.number).length},null,2);try{await navigator.clipboard.writeText(textOut);$("resultNote").textContent=document.documentElement.lang==="en"?"Result copied to clipboard.":"ফলাফল কপি হয়েছে।";}catch(_){download("number-result.json",textOut);}});
   $("exportResultBtn").addEventListener("click",()=>{if(lastResult)download("number-result.json",JSON.stringify({...lastResult,localReports:reportsFor(lastResult.number).length},null,2));});
   $("reportForm").addEventListener("submit",e=>{e.preventDefault();const checked=validate($("reportPhone").value);if(!checked.valid){$("reportMessage").textContent=document.documentElement.lang==="en"?"Enter a valid Bangladesh mobile number.":"সঠিক বাংলাদেশি মোবাইল নম্বর দিন।";return;}const reports=read(KEYS.reports);reports.push({id:Date.now()+"-"+Math.random().toString(36).slice(2,7),number:checked.number,type:$("reportType").value,details:$("reportDetails").value.trim().slice(0,240),createdAt:new Date().toISOString()});try{write(KEYS.reports,reports.slice(-500));$("reportMessage").textContent=document.documentElement.lang==="en"?"Saved only in this browser; not publicly shared.":"রিপোর্ট শুধু এই ব্রাউজারে সংরক্ষিত হয়েছে; পাবলিক নয়।";$("reportForm").reset();renderAll();}catch(_){$("reportMessage").textContent="ব্রাউজার স্টোরেজে সংরক্ষণ করা যায়নি।";}});
-  $("historyFilter").addEventListener("input",renderHistory);$("reportFilter").addEventListener("input",renderReports);
+  $("historyFilter").addEventListener("input",renderHistory);$("reportFilter").addEventListener("input",renderReports);\n  $("miniHistoryFilter").addEventListener("input",renderMiniHistory);\n  document.querySelectorAll("[data-mini-period]").forEach(btn=>btn.addEventListener("click",()=>{miniPeriod=btn.dataset.miniPeriod;document.querySelectorAll("[data-mini-period]").forEach(b=>b.classList.toggle("active",b===btn));renderMiniHistory();}));\n  $("miniClearHistoryBtn").addEventListener("click",()=>{if(askConfirm("সার্চ হিস্ট্রি মুছে ফেলবেন?")){write(KEYS.history,[]);renderAll();}});
   $("historyRows").addEventListener("click",e=>{const lookupBtn=e.target.closest("[data-history-lookup]"),del=e.target.closest("[data-history-delete]");if(lookupBtn){$("phone").value=lookupBtn.dataset.historyLookup;lookup($("phone").value,false);$("result").scrollIntoView({behavior:"smooth",block:"nearest"});}if(del){const list=read(KEYS.history);list.splice(Number(del.dataset.historyDelete),1);write(KEYS.history,list);renderAll();}});
   $("reportRows").addEventListener("click",e=>{const del=e.target.closest("[data-report-delete]");if(!del)return;const list=read(KEYS.reports);list.splice(Number(del.dataset.reportDelete),1);write(KEYS.reports,list);renderAll();});
   $("clearHistoryBtn").addEventListener("click",()=>{if(askConfirm("সার্চ হিস্ট্রি মুছে ফেলবেন?")){write(KEYS.history,[]);renderAll();}});
