@@ -1,5 +1,5 @@
-const CACHE_NAME = "number-lookup-bd-v9";
-const APP_SHELL = ["./", "./index.html", "./style.css?v=9", "./app.js?v=9", "./manifest.webmanifest", "./icon.svg"];
+const CACHE_NAME = "number-lookup-bd-v10";
+const APP_SHELL = ["./", "./index.html", "./style.css?v=10", "./app.js?v=10", "./manifest.webmanifest", "./icon.svg"];
 
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));
@@ -38,7 +38,7 @@ self.addEventListener("fetch", event => {
     return;
   }
 
-  // Versioned CSS/JS requests ensure a changed asset does not reuse the old URL cache entry.
+  // Versioned asset URLs avoid reusing styles/scripts from an earlier deployment.
   event.respondWith(
     caches.match(event.request).then(cached => cached || fetch(event.request).then(response => {
       if (response && response.ok) {
