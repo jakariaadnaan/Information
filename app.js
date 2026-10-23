@@ -160,11 +160,13 @@
     if(action==="reports")setMobileView("tools","reports");
     if(action==="reportform")setMobileView("tools","reportform");
     if(action==="map")setMobileView("tools","map");
+    if(action==="splash")setMobileView("splash");
     if(action==="extra"){setMobileView("lookup","extra");$("result").hidden= !lastResult;$("resultPreview").hidden=!!lastResult;}
     if(action==="backup")$("backupBtn").click();
     if(action==="restore")$("restoreFile").click();
   }));
   $("openTerminalBtn").addEventListener("click",()=>setMobileView("lookup","terminal"));
+  $("enterAppBtn").addEventListener("click",()=>setMobileView("lookup"));
   if(isMobileLayout())setMobileView("lookup");
   window.addEventListener("resize",()=>{
     if(!isMobileLayout()){
