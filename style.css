@@ -44,3 +44,84 @@ body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:5;opaci
 @keyframes radarPulse{0%,100%{opacity:.5;transform:scale(.96)}50%{opacity:1;transform:scale(1.04)}}@keyframes blink{50%{opacity:0}}@keyframes terminalFlash{from{opacity:.65}to{opacity:1}}
 @media(max-width:1050px){.cyber-dashboard{grid-template-columns:minmax(190px,.72fr) minmax(340px,1.3fr);}.history-panel{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;column-gap:14px}.history-panel>.panel-topline,.history-panel>.mini-history-tabs,.history-panel>.mini-history-filter,.history-panel>.mini-history-rows,.history-panel>.history-note,.history-panel>.mini-clear-btn,.history-panel>.mini-nav{grid-column:1/-1}.history-panel .mini-history-rows{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.history-panel .mini-history-entry{border:1px solid #10301e;padding:10px}.history-panel .mini-history-rows .mini-empty{grid-column:1/-1}}
 @media(max-width:700px){.app-shell{padding:0 15px}.cyber-dashboard{grid-template-columns:1fr;gap:14px;padding-top:22px}.primary-column{grid-row:1}.terminal-panel{grid-row:2}.history-panel{grid-row:3;display:block}.history-panel .mini-history-rows{display:block}.primary-column .hero{padding-top:12px}.primary-column .dashboard-grid{gap:6px}.primary-column .metric-card{padding:10px 6px}.primary-column .metric-card strong{font-size:20px}.primary-column .metric-card span{font-size:8px}.primary-column .metric-card small{font-size:7px}.terminal-grid{height:100px}.history-panel .mini-history-entry{border:0;border-bottom:1px solid #10301e;padding:10px 0}}
+
+
+/* Mockup-matched responsive number scan experience */
+.lookup-title{font-size:clamp(25px,3.1vw,38px)!important;letter-spacing:.035em!important;line-height:1.2!important}
+.lookup-title span{display:block;margin-top:5px}
+.scan-progress{border:1px solid #17613c;background:linear-gradient(120deg,#06180e,#020805);padding:13px 15px;margin:16px 0 0;position:relative;overflow:hidden}
+.scan-progress:after{content:"";position:absolute;top:0;bottom:0;width:24%;left:-30%;background:linear-gradient(90deg,transparent,#00ff8812,transparent);pointer-events:none}
+.scan-progress.is-scanning:after{animation:scanSweep 1.1s linear infinite}
+.scan-head{display:flex;align-items:center;gap:10px;min-width:0}
+.scan-orb{display:grid;place-items:center;width:34px;height:34px;flex:none;border:1px solid #00ff8870;border-radius:50%;color:#00ff88;font-size:20px;text-shadow:0 0 12px #00ff88}
+.scan-head b,.scan-head small{display:block}
+.scan-head b{font-size:10px;color:#00ff88;letter-spacing:.08em}
+.scan-head small{font-size:8px;color:#6c9d81;margin-top:3px}
+.scan-state{margin-left:auto;white-space:nowrap;border:1px solid #244c35;padding:4px 6px;color:#789c85;font-size:7px;letter-spacing:.08em}
+.scan-state.complete{border-color:#00ff8866;color:#00ff88}
+.scan-track{height:3px;background:#102d1d;margin-top:13px;overflow:hidden}
+.scan-track i{display:block;width:0;height:100%;background:#00ff88;box-shadow:0 0 12px #00ff88;transition:width .35s ease}
+.scan-progress.is-scanning .scan-track i{width:68%;animation:scanBar 1s ease-in-out infinite alternate}
+.scan-progress.is-complete .scan-track i{width:100%}
+.scan-foot{display:flex;justify-content:space-between;gap:7px;margin-top:8px;font-size:7px;letter-spacing:.05em;color:#6c9d81}
+.scan-muted{color:#52675a}
+.extra-info-title{display:flex;justify-content:space-between;gap:8px;margin:17px 0 8px;font-size:9px;font-weight:800;letter-spacing:.12em;color:#00ff88}
+.extra-info-title span{font-size:7px;color:#658773;font-weight:500}
+.result-heading .section-kicker{color:#00ff88}
+.map-panel{scroll-margin-bottom:90px}
+.mini-nav{position:sticky;bottom:0;z-index:8}
+@keyframes scanSweep{to{left:110%}}
+@keyframes scanBar{from{width:28%}to{width:78%}}
+@media(max-width:700px){
+ .app-shell{padding:0 12px;padding-bottom:78px}
+ .topbar{min-height:70px}
+ .topbar:after{display:none}
+ .brand-mark{width:35px;height:35px}
+ .brand strong{font-size:12px}
+ .brand small{font-size:7px}
+ .header-actions .status-pill{display:none}
+ .cyber-dashboard{padding-top:12px;gap:13px}
+ .primary-column{display:contents}
+ .primary-column .hero{grid-row:1;padding:9px 0 13px}
+ .primary-column .dashboard-grid{grid-row:3}
+ .primary-column #result{grid-row:4}
+ .primary-column .map-panel{grid-row:5}
+ .primary-column .hero:before{display:none}
+ .primary-column .eyebrow{font-size:8px}
+ .primary-column .lookup-title{font-size:26px!important;margin:14px 0 10px}
+ .primary-column .hero-copy{font-size:10px;margin-bottom:16px}
+ .primary-column .lookup-card{padding:13px}
+ .primary-column .lookup-card label{font-size:9px}
+ .primary-column .search-row{gap:8px}
+ .primary-column .search-row .input-wrap{min-height:47px}
+ .primary-column .search-row button{min-height:46px}
+ .primary-column .form-foot{font-size:8px}
+ .primary-column .trust-row{display:none}
+ .scan-progress{margin-top:12px;padding:12px}
+ .scan-head b{font-size:9px}
+ .scan-foot{font-size:6px}
+ .primary-column .dashboard-grid{margin:0}
+ .primary-column .metric-card{padding:9px 6px}
+ .primary-column .metric-card span{font-size:7px}
+ .primary-column .metric-card strong{font-size:19px}
+ .primary-column .metric-card small{font-size:6px}
+ .primary-column .result-card{margin:0;padding:14px}
+ .primary-column .result-heading h2{font-size:17px}
+ .primary-column .result-number{font-size:20px;margin:13px 0}
+ .primary-column .result-grid{gap:7px}
+ .primary-column .result-item{padding:9px 10px;border:1px solid #12452e}
+ .primary-column .map-panel{margin:0}
+ .map-illustration{height:155px}
+ .terminal-panel{grid-row:6}
+ .history-panel{grid-row:7}
+ .mini-nav{position:fixed;left:0;right:0;bottom:0;z-index:50;margin:0;padding:9px 7px max(9px,env(safe-area-inset-bottom));grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid #00ff8860;background:rgba(2,8,5,.97);backdrop-filter:blur(14px);box-shadow:0 -8px 30px #0008}
+ .mini-nav a{font-size:17px;padding:1px 0 0}
+ .mini-nav small{font-size:9px;margin-top:2px}
+ .content-section{padding-top:24px}
+}
+@media(min-width:701px){
+ .mini-nav{position:static}
+ .lookup-title span{display:inline}
+ .scan-progress{max-width:100%}
+}
+@media(prefers-reduced-motion:reduce){.scan-progress:after,.scan-progress.is-scanning .scan-track i{animation:none}}
