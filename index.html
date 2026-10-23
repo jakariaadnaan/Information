@@ -26,7 +26,7 @@
       </div>
     </header>
     <main>
-      <section class="cyber-dashboard" aria-label="Number lookup dashboard">
+      <section id="lookupSection" class="cyber-dashboard" aria-label="Number lookup dashboard">
         <aside class="side-panel terminal-panel" aria-label="Scan terminal">
           <div class="panel-topline"><span class="live-dot"></span> SCAN TERMINAL <span class="panel-id">SYS.01</span></div>
           <p class="panel-subtitle">CONNECTING TO DATA SOURCES</p>
@@ -91,7 +91,7 @@
           <p class="history-note">LOCAL HISTORY ONLY · STORED ON THIS DEVICE</p>
           <button id="miniClearHistoryBtn" type="button" class="mini-clear-btn">CLEAR HISTORY</button>
           <nav class="mini-nav" aria-label="Dashboard navigation">
-            <a class="active" href="#phone">⌕<small>Lookup</small></a><a href="#historyFilter">◷<small>History</small></a><a href="#batchInput">⚒<small>Tools</small></a><a href="#backupBtn">⚙<small>Setting</small></a>
+            <a class="active" data-nav-target="lookupSection" href="#lookupSection">⌕<small>Lookup</small></a><a data-nav-target="historySection" href="#historySection">◷<small>History</small></a><a data-nav-target="toolsSection" href="#toolsSection">⚒<small>Tools</small></a><a data-nav-target="settingsSection" href="#settingsSection">⚙<small>Setting</small></a>
           </nav>
         </aside>
       </section>
@@ -104,7 +104,7 @@
         </div>
       </section>
 
-      <section class="tool-panel">
+      <section id="toolsSection" class="tool-panel">
         <div class="section-heading"><div><div class="section-kicker">BATCH TOOL</div><h2 data-i18n="batchTitle">একাধিক নম্বর যাচাই</h2></div></div>
         <p class="panel-copy" data-i18n="batchCopy">প্রতি লাইনে একটি নম্বর লিখুন অথবা TXT/CSV ফাইল ইমপোর্ট করুন। যাচাই শুধু আপনার ব্রাউজারেই হবে।</p>
         <textarea id="batchInput" rows="4" placeholder="017XXXXXXXX&#10;+88018XXXXXXXX"></textarea>
@@ -113,7 +113,7 @@
         <div class="table-scroll"><table><thead><tr><th data-i18n="thNumber">নম্বর</th><th data-i18n="thFormat">ফরম্যাট</th><th data-i18n="thOperator">সম্ভাব্য রেঞ্জ</th></tr></thead><tbody id="batchResults"><tr><td colspan="3" class="empty-cell" data-i18n="batchEmpty">এখনও কোনো ব্যাচ চালানো হয়নি।</td></tr></tbody></table></div>
       </section>
 
-      <section class="tool-panel">
+      <section id="historySection" class="tool-panel">
         <div class="section-heading"><div><div class="section-kicker">LOCAL ACTIVITY</div><h2 data-i18n="historyTitle">সার্চ হিস্ট্রি</h2></div><button id="exportHistoryBtn" class="secondary-btn" type="button" data-i18n="exportJson">JSON এক্সপোর্ট</button></div>
         <div class="toolbar-wrap"><input id="historyFilter" type="search" placeholder="নম্বর দিয়ে খুঁজুন…" aria-label="Search history"><button id="clearHistoryBtn" class="danger-btn" type="button" data-i18n="clearHistory">হিস্ট্রি মুছুন</button></div>
         <div class="table-scroll"><table><thead><tr><th data-i18n="thNumber">নম্বর</th><th data-i18n="thDate">তারিখ</th><th data-i18n="thStatus">স্ট্যাটাস</th><th data-i18n="thAction">অ্যাকশন</th></tr></thead><tbody id="historyRows"><tr><td colspan="4" class="empty-cell">কোনো হিস্ট্রি নেই।</td></tr></tbody></table></div>
@@ -135,7 +135,7 @@
         <div class="table-scroll"><table><thead><tr><th data-i18n="thNumber">নম্বর</th><th data-i18n="thType">ধরন</th><th data-i18n="thDate">তারিখ</th><th data-i18n="thAction">অ্যাকশন</th></tr></thead><tbody id="reportRows"><tr><td colspan="4" class="empty-cell">কোনো রিপোর্ট নেই।</td></tr></tbody></table></div>
       </section>
 
-      <section class="tool-panel privacy-panel">
+      <section id="settingsSection" class="tool-panel privacy-panel">
         <div class="section-heading"><div><div class="section-kicker">PRIVACY CENTER</div><h2 data-i18n="privacyTitle">আপনার ডেটা, আপনার নিয়ন্ত্রণে</h2></div></div>
         <p class="panel-copy" data-i18n="privacyCopy">সার্চ হিস্ট্রি, রিপোর্ট ও পছন্দ এই ব্রাউজারের localStorage-এ থাকে। অন্য ডিভাইসে সিঙ্ক হয় না।</p>
         <div class="toolbar-wrap"><button id="backupBtn" class="secondary-btn" type="button" data-i18n="backup">সব ডেটার JSON ব্যাকআপ</button><label class="file-button" for="restoreFile" data-i18n="restore">JSON ব্যাকআপ রিস্টোর</label><input id="restoreFile" type="file" accept=".json,application/json" hidden><button id="clearAllBtn" class="danger-btn" type="button" data-i18n="clearAll">সব লোকাল ডেটা মুছুন</button></div>
