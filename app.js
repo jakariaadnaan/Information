@@ -55,12 +55,12 @@
     return item;
   }
   function renderHistory() {
-    const filter=normalize($("historyFilter").value), rows=read(KEYS.history).filter(x=>!filter||x.number.includes(filter));
-    $("historyRows").innerHTML=rows.length?rows.map((x,i)=>'<tr><td>'+safeText(x.formatted||x.number)+'</td><td>'+safeText(dateLabel(x.createdAt))+'</td><td>'+safeText(x.valid?(document.documentElement.lang==="en"?"Valid":"সঠিক"):(document.documentElement.lang==="en"?"Invalid":"ভুল"))+'</td><td><button class="table-action" data-history-lookup="'+safeText(x.number)+'">'+(document.documentElement.lang==="en"?"Check":"দেখুন")+'</button> <button class="table-action" data-history-delete="'+i+'">'+(document.documentElement.lang==="en"?"Delete":"মুছুন")+'</button></td></tr>').join(""):'<tr><td colspan="4" class="empty-cell">'+(document.documentElement.lang==="en"?"No matching history.":"কোনো হিস্ট্রি নেই।")+'</td></tr>';
+    const filter=normalize($("historyFilter").value), all=read(KEYS.history), rows=all.map((x,i)=>({...x,_index:i})).filter(x=>!filter||x.number.includes(filter));
+    $("historyRows").innerHTML=rows.length?rows.map((x)=>'<tr><td>'+safeText(x.formatted||x.number)+'</td><td>'+safeText(dateLabel(x.createdAt))+'</td><td>'+safeText(x.valid?(document.documentElement.lang==="en"?"Valid":"সঠিক"):(document.documentElement.lang==="en"?"Invalid":"ভুল"))+'</td><td><button class="table-action" data-history-lookup="'+safeText(x.number)+'">'+(document.documentElement.lang==="en"?"Check":"দেখুন")+'</button> <button class="table-action" data-history-delete="'+x._index+'">'+(document.documentElement.lang==="en"?"Delete":"মুছুন")+'</button></td></tr>').join(""):'<tr><td colspan="4" class="empty-cell">'+(document.documentElement.lang==="en"?"No matching history.":"কোনো হিস্ট্রি নেই।")+'</td></tr>';
   }
   function renderReports() {
-    const filter=$("reportFilter").value.trim().toLowerCase(), all=read(KEYS.reports);
-    const rows=all.map((x,i)=>({...x,_index:i})).filter(x=>!filter||(x.number||"").includes(normalize(filter))||(x.type||"").toLowerCase().includes(filter)||(x.details||"").toLowerCase().includes(filter));
+    const filter=$("reportFilter").value.trim().toLowerCase(), all=read(KEYS.reports), numberFilter=normalize(filter);
+    const rows=all.map((x,i)=>({...x,_index:i})).filter(x=>!filter||(numberFilter && (x.number||"").includes(numberFilter))||(x.type||"").toLowerCase().includes(filter)||(x.details||"").toLowerCase().includes(filter));
     $("reportRows").innerHTML=rows.length?rows.map(x=>'<tr><td>'+safeText(x.number)+'</td><td>'+safeText(x.type)+'</td><td>'+safeText(dateLabel(x.createdAt))+'</td><td><button class="table-action" data-report-delete="'+x._index+'">'+(document.documentElement.lang==="en"?"Delete":"মুছুন")+'</button></td></tr>').join(""):'<tr><td colspan="4" class="empty-cell">'+(document.documentElement.lang==="en"?"No matching reports.":"কোনো রিপোর্ট নেই।")+'</td></tr>';
   }
   function renderAll() {
