@@ -109,7 +109,55 @@
   function applyTheme(theme) { document.documentElement.dataset.theme=theme;localStorage.setItem(KEYS.theme,theme);$("themeBtn").textContent=theme==="dark"?"☼":"☾"; }
   function askConfirm(message) { return window.confirm(message); }
 
-  document.querySelectorAll("[data-nav-target]").forEach(link=>link.addEventListener("click",()=>{document.querySelectorAll("[data-nav-target]").forEach(item=>item.classList.toggle("active",item===link));}));
+
+  function isMobileLayout(){return window.matchMedia("(max-width: 700px)").matches;}
+  function setMobileView(view,panel=""){
+    document.body.dataset.activeView=view;
+    if(view==="lookup" && panel) document.body.dataset.lookupPanel=panel; else delete document.body.dataset.lookupPanel;
+    if(view==="tools" && panel) document.body.dataset.toolsPanel=panel; else delete document.body.dataset.toolsPanel;
+    document.querySelectorAll("[data-nav-view]").forEach(link=>link.classList.toggle("active",link.dataset.navView===view));
+    if(isMobileLayout()) window.scrollTo({top:0,behavior:"auto"});
+  }
+  function ensureToolBackButton(selector){
+    const target=document.querySelector(selector);
+    if(!target||target.querySelector("[data-return-tools]"))return;
+    const button=document.createElement("button");
+    button.type="button";button.className="back-to-tools";button.dataset.returnTools="";
+    button.textContent="← ALL TOOLS";
+    target.insertBefore(button,target.firstChild);
+  }
+  ensureToolBackButton("#reportsManagement");
+  ensureToolBackButton("#reportCreation");
+  ensureToolBackButton("#locationMapPanel");
+  document.querySelectorAll("[data-nav-view]").forEach(link=>link.addEventListener("click",event=>{
+    if(isMobileLayout()){event.preventDefault();setMobileView(link.dataset.navView);}
+    else{document.querySelectorAll("[data-nav-view]").forEach(item=>item.classList.toggle("active",item===link));}
+  }));
+  document.querySelectorAll("[data-return-tools]").forEach(button=>button.addEventListener("click",()=>setMobileView("tools")));
+  document.querySelectorAll("[data-tool-action]").forEach(button=>button.addEventListener("click",()=>{
+    const action=button.dataset.toolAction;
+    if(action==="batch"){setMobileView("tools","batch");}
+    if(action==="csv"){
+      setMobileView("tools","batch");
+      $("batchMessage").textContent=document.documentElement.lang==="en"?"Run batch validation first, then use Export CSV.":"প্রথমে ব্যাচ যাচাই করুন, তারপর CSV এক্সপোর্ট চাপুন।";
+    }
+    if(action==="reports")setMobileView("tools","reports");
+    if(action==="reportform")setMobileView("tools","reportform");
+    if(action==="map")setMobileView("tools","map");
+    if(action==="backup")$("backupBtn").click();
+    if(action==="restore")$("restoreFile").click();
+  }));
+  $("openTerminalBtn").addEventListener("click",()=>setMobileView("lookup","terminal"));
+  if(isMobileLayout())setMobileView("lookup");
+  window.addEventListener("resize",()=>{
+    if(!isMobileLayout()){
+      delete document.body.dataset.activeView;
+      delete document.body.dataset.lookupPanel;
+      delete document.body.dataset.toolsPanel;
+      document.querySelectorAll("[data-nav-view]").forEach(link=>link.classList.toggle("active",link.dataset.navView==="lookup"));
+    }else if(!document.body.dataset.activeView)setMobileView("lookup");
+  });
+
   $("lookupBtn").addEventListener("click",()=>lookup($("phone").value));
   $("phone").addEventListener("keydown",e=>{if(e.key==="Enter")lookup($("phone").value);});
   $("copyResultBtn").addEventListener("click",async()=>{if(!lastResult)return;const textOut=JSON.stringify({...lastResult,localReports:reportsFor(lastResult.number).length},null,2);try{await navigator.clipboard.writeText(textOut);$("resultNote").textContent=document.documentElement.lang==="en"?"Result copied to clipboard.":"ফলাফল কপি হয়েছে।";}catch(_){download("number-result.json",textOut);}});
