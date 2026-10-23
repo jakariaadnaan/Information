@@ -55,7 +55,7 @@
           <div class="form-foot"><span id="input-hint" data-i18n="localHint">আপনার নম্বর সার্ভারে পাঠানো হচ্ছে না।</span><span class="secure-label">⌁ Local check</span></div>
           <p id="error" class="error" role="alert" hidden></p>
         </div>
-        <section class="scan-progress" aria-live="polite"><div class="scan-head"><span class="scan-orb">◎</span><div><b>INITIATING DEEP SCAN</b><small id="scanCaption">READY FOR INPUT · LOCAL SCAN ONLY</small></div><span id="scanState" class="scan-state">STANDBY</span></div><div class="scan-track"><i id="scanTrackBar"></i></div><div class="scan-foot"><span>FORMAT ENGINE</span><span>PREFIX RULES</span><span class="scan-muted">LIVE DATA OFFLINE</span></div></section>
+        <section class="scan-progress" aria-live="polite"><div class="scan-head"><span class="scan-orb">◎</span><div><b>INITIATING DEEP SCAN</b><small id="scanCaption">READY FOR INPUT · LOCAL SCAN ONLY</small></div><span id="scanState" class="scan-state">STANDBY</span></div><div class="scan-track"><i id="scanTrackBar"></i></div><div class="scan-foot"><span>FORMAT ENGINE</span><span>PREFIX RULES</span><span class="scan-muted">LIVE DATA OFFLINE</span><button id="openTerminalBtn" type="button" class="terminal-open-btn">SCAN LOG ↗</button></div></section>
         <div class="trust-row"><span data-i18n="trust1">✓ ফরম্যাট যাচাই</span><span data-i18n="trust2">✓ মালিকের নাম নয়</span><span data-i18n="trust3">✓ ব্রাউজারেই পরীক্ষা</span></div>
       </section>
 
@@ -90,9 +90,6 @@
           <div id="miniHistoryRows" class="mini-history-rows"><p class="mini-empty">NO LOCAL SEARCH HISTORY</p></div>
           <p class="history-note">LOCAL HISTORY ONLY · STORED ON THIS DEVICE</p>
           <button id="miniClearHistoryBtn" type="button" class="mini-clear-btn">CLEAR HISTORY</button>
-          <nav class="mini-nav" aria-label="Dashboard navigation">
-            <a class="active" data-nav-target="lookupSection" href="#lookupSection">⌕<small>Lookup</small></a><a data-nav-target="historySection" href="#historySection">◷<small>History</small></a><a data-nav-target="toolsSection" href="#toolsSection">⚒<small>Tools</small></a><a data-nav-target="settingsSection" href="#settingsSection">⚙<small>Setting</small></a>
-          </nav>
         </aside>
       </section>
       <section class="content-section">
@@ -104,7 +101,15 @@
         </div>
       </section>
 
-      <section id="toolsSection" class="tool-panel">
+      <section id="toolsHub" class="tools-hub" aria-label="Tools menu">
+<div class="mobile-screen-title"><span class="section-kicker">UTILITY MODULES</span><h2>TOOLS</h2><p>Choose a tool. Runs locally in this browser.</p></div>
+<button type="button" class="tool-menu-item" data-tool-action="batch"><span class="tool-menu-icon">▦</span><span class="tool-menu-copy"><b>BATCH VALIDATION</b><small>Validate multiple numbers at once</small></span><span class="tool-menu-cta">OPEN ↗</span></button>
+<button type="button" class="tool-menu-item" data-tool-action="csv"><span class="tool-menu-icon">⇩</span><span class="tool-menu-copy"><b>CSV EXPORT</b><small>Export locally checked results to CSV</small></span><span class="tool-menu-cta">OPEN ↗</span></button>
+<button type="button" class="tool-menu-item" data-tool-action="reports"><span class="tool-menu-icon">▤</span><span class="tool-menu-copy"><b>LOCAL REPORTS</b><small>View and manage reports saved on this device</small></span><span class="tool-menu-cta">OPEN ↗</span></button>
+<button type="button" class="tool-menu-item" data-tool-action="backup"><span class="tool-menu-icon">▣</span><span class="tool-menu-copy"><b>JSON BACKUP</b><small>Download your local data as JSON</small></span><span class="tool-menu-cta">BACKUP</span></button>
+<button type="button" class="tool-menu-item" data-tool-action="restore"><span class="tool-menu-icon">⤒</span><span class="tool-menu-copy"><b>RESTORE</b><small>Restore from a local backup file</small></span><span class="tool-menu-cta">RESTORE</span></button>
+<p class="tools-hub-note">NO SUBSCRIBER LOOKUP · NO LIVE LOCATION SERVICE</p></section>
+<section id="toolsSection" class="tool-panel">
         <div class="section-heading"><div><div class="section-kicker">BATCH TOOL</div><h2 data-i18n="batchTitle">একাধিক নম্বর যাচাই</h2></div></div>
         <p class="panel-copy" data-i18n="batchCopy">প্রতি লাইনে একটি নম্বর লিখুন অথবা TXT/CSV ফাইল ইমপোর্ট করুন। যাচাই শুধু আপনার ব্রাউজারেই হবে।</p>
         <textarea id="batchInput" rows="4" placeholder="017XXXXXXXX&#10;+88018XXXXXXXX"></textarea>
@@ -129,7 +134,7 @@
         </form>
       </section>
 
-      <section class="tool-panel">
+      <section id="reportsManagement" class="tool-panel">
         <div class="section-heading"><div><div class="section-kicker">REPORT MANAGEMENT</div><h2 data-i18n="reportManageTitle">আপনার লোকাল রিপোর্ট</h2></div><button id="exportReportsBtn" class="secondary-btn" type="button" data-i18n="exportCsv">CSV এক্সপোর্ট</button></div>
         <div class="toolbar-wrap"><input id="reportFilter" type="search" placeholder="নম্বর বা রিপোর্টের ধরন দিয়ে খুঁজুন…" aria-label="Search reports"><button id="clearReportsBtn" class="danger-btn" type="button" data-i18n="clearReports">সব রিপোর্ট মুছুন</button></div>
         <div class="table-scroll"><table><thead><tr><th data-i18n="thNumber">নম্বর</th><th data-i18n="thType">ধরন</th><th data-i18n="thDate">তারিখ</th><th data-i18n="thAction">অ্যাকশন</th></tr></thead><tbody id="reportRows"><tr><td colspan="4" class="empty-cell">কোনো রিপোর্ট নেই।</td></tr></tbody></table></div>
@@ -144,6 +149,12 @@
 
       <section class="notice"><span class="notice-icon">i</span><div><strong data-i18n="limitTitle">গুরুত্বপূর্ণ সীমাবদ্ধতা</strong><p data-i18n="limitCopy">এই টুল নম্বরের গঠন ও প্রিফিক্স অনুমান করে। এটি কোনো ব্যক্তির নাম, NID, SIM নিবন্ধন, কল/SMS ইতিহাস, অবস্থান বা লাইভ অপারেটর শনাক্ত করে না। লোকাল রিপোর্ট অন্য ব্যবহারকারীদের কাছে যায় না।</p></div></section>
     </main>
+    <nav class="mini-nav" aria-label="Main navigation">
+      <a class="active" data-nav-view="lookup" href="#lookupSection">⌕<small>Lookup</small></a>
+      <a data-nav-view="history" href="#historySection">◷<small>History</small></a>
+      <a data-nav-view="tools" href="#toolsSection">⚒<small>Tools</small></a>
+      <a data-nav-view="settings" href="#settingsSection">⚙<small>Setting</small></a>
+    </nav>
     <footer><div class="footer-brand">Number Lookup BD</div><p data-i18n="footerCopy">তথ্যভিত্তিক ব্যবহার করুন · ব্যক্তিগত গোপনীয়তাকে সম্মান করুন</p><div class="footer-links"><a href="https://btrc.gov.bd/" target="_blank" rel="noopener noreferrer">BTRC ↗</a><a href="https://www.itu.int/" target="_blank" rel="noopener noreferrer">ITU ↗</a><a href="https://github.com/jakariaadnaan/Information" target="_blank" rel="noopener noreferrer">Source code ↗</a></div></footer>
   </div>
   <script src="app.js"></script>
