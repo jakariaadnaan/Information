@@ -1,7 +1,7 @@
 (() => {
   "use strict";
   const $ = (id) => document.getElementById(id);
-  const KEYS = {history:"nlbd_history_v2",reports:"nlbd_reports",theme:"nlbd_theme",language:"nlbd_language"};
+  const KEYS = {history:"nlbd_history_v2",reports:"nlbd_reports",theme:"nlbd_theme",language:"nlbd_language",autoSaveHistory:"nlbd_auto_save_history"};
   const digitsOnly = (value) => String(value || "").replace(/[^0-9]/g, "");
   let lastResult = null, batchResults = [], installPrompt = null;
 
@@ -28,6 +28,16 @@
   }
   function read(key) { try { const v=JSON.parse(localStorage.getItem(key)||"[]"); return Array.isArray(v)?v:[]; } catch (_) { return []; } }
   function write(key,value) { localStorage.setItem(key,JSON.stringify(value)); }
+  function autoSaveEnabled(){return localStorage.getItem(KEYS.autoSaveHistory)!=="false";}
+  function updateAutoSavePreference(){
+    const enabled=autoSaveEnabled(),button=$("autoSaveBtn"),caption=$("autoSaveCaption");
+    if(button){button.setAttribute("aria-pressed",String(enabled));button.classList.toggle("is-disabled",false);}
+    if(caption)caption.textContent=enabled?"SAVE VALID LOOKUPS ON THIS DEVICE":"HISTORY SAVING IS OFF";
+  }
+  function displayMaskedNumber(value){
+    const number=normalize(value);
+    return /^01[3-9]\d{8}$/.test(number)?"+880 "+number.slice(1,5)+" "+number.slice(5,7)+"****":"NUMBER ••••";
+  }
   function reportsFor(number) { return read(KEYS.reports).filter(r=>r.number===number); }
   function safeText(value) { return String(value ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
   function dateLabel(value) { try { return new Date(value).toLocaleString(document.documentElement.lang==="en"?"en-GB":"bn-BD"); } catch (_) { return String(value||""); } }
@@ -62,7 +72,7 @@
     $("resultNote").textContent=document.documentElement.lang==="en"?"This checks format and prefix only. No live database was queried. Operator estimates may be wrong due to mobile number portability. Local reports are unverified and visible only in this browser.":"এটি শুধু নম্বরের গঠন ও প্রিফিক্স পরীক্ষা। কোনো লাইভ ডেটাবেসে অনুসন্ধান করা হয়নি। অপারেটর অনুমান নম্বর পোর্টেবিলিটির কারণে ভুল হতে পারে। রিপোর্ট যাচাইকৃত নয় এবং শুধু এই ব্রাউজারে দেখা যায়।";
     $("resultPreview").hidden=true;
     $("result").hidden=false;
-    if(shouldSave){saveHistory(item);renderAll();}
+    if(shouldSave){if(autoSaveEnabled())saveHistory(item);renderAll();}
     return item;
   }
   function renderHistory() {
@@ -85,7 +95,7 @@
       const periodOk=miniPeriod==="today" ? ts>=dayStart.getTime() : miniPeriod==="week" ? ts>=now-7*24*60*60*1000 : true;
       return periodOk && (!q || String(x.number||"").includes(q));
     }).slice(0,8);
-    target.innerHTML=list.length?list.map(x=>'<article class="mini-history-entry"><span>◉</span><div><b>'+safeText(x.formatted||x.number)+'</b><small>'+safeText(x.operator||"Format check")+'</small><time>'+safeText(dateLabel(x.createdAt))+'</time></div></article>').join(""):'<p class="mini-empty">NO MATCHING LOCAL HISTORY</p>';
+    target.innerHTML=list.length?list.map(x=>'<button type="button" class="mini-history-entry" data-mini-lookup="'+safeText(x.number)+'"><span>◉</span><div><b>'+safeText(displayMaskedNumber(x.number))+'</b><small>'+safeText(x.operator||"Format check")+'</small><time>'+safeText(dateLabel(x.createdAt))+'</time></div></button>').join(""):'<p class="mini-empty">NO MATCHING LOCAL HISTORY</p>';
   }
   function renderAll() {
     const history=read(KEYS.history), reports=read(KEYS.reports);
@@ -106,12 +116,13 @@
     document.documentElement.lang=lang;localStorage.setItem(KEYS.language,lang);
     document.querySelectorAll("[data-i18n]").forEach(el=>{const val=translations[lang][el.dataset.i18n];if(val!==undefined)el.innerHTML=val;});
     $("languageBtn").textContent=lang==="bn"?"EN":"বাং";
+    const languageSetting=$("settingsLanguageBtn");if(languageSetting)languageSetting.innerHTML=(lang==="bn"?"বাংলা":"ENGLISH")+" <span>↗</span>";
     $("phone").placeholder=lang==="en"?"01XXXXXXXXX or +8801XXXXXXXXX":"01XXXXXXXXX বা +8801XXXXXXXXX";
     $("historyFilter").placeholder=lang==="en"?"Search by number…":"নম্বর দিয়ে খুঁজুন…";
     $("reportFilter").placeholder=lang==="en"?"Search number or report type…":"নম্বর বা রিপোর্টের ধরন দিয়ে খুঁজুন…";
     renderAll();
   }
-  function applyTheme(theme) { document.documentElement.dataset.theme=theme;localStorage.setItem(KEYS.theme,theme);$("themeBtn").textContent=theme==="dark"?"☼":"☾"; }
+  function applyTheme(theme) { document.documentElement.dataset.theme=theme;localStorage.setItem(KEYS.theme,theme);$("themeBtn").textContent=theme==="dark"?"☼":"☾";const label=$("settingsThemeBtn");if(label)label.innerHTML="MATRIX GREEN <span>●</span>"; }
   function askConfirm(message) { return window.confirm(message); }
 
 
@@ -171,6 +182,12 @@
   $("reportForm").addEventListener("submit",e=>{e.preventDefault();const checked=validate($("reportPhone").value);if(!checked.valid){$("reportMessage").textContent=document.documentElement.lang==="en"?"Enter a valid Bangladesh mobile number.":"সঠিক বাংলাদেশি মোবাইল নম্বর দিন।";return;}const reports=read(KEYS.reports);reports.push({id:Date.now()+"-"+Math.random().toString(36).slice(2,7),number:checked.number,type:$("reportType").value,details:$("reportDetails").value.trim().slice(0,240),createdAt:new Date().toISOString()});try{write(KEYS.reports,reports.slice(-500));$("reportMessage").textContent=document.documentElement.lang==="en"?"Saved only in this browser; not publicly shared.":"রিপোর্ট শুধু এই ব্রাউজারে সংরক্ষিত হয়েছে; পাবলিক নয়।";$("reportForm").reset();renderAll();}catch(_){$("reportMessage").textContent="ব্রাউজার স্টোরেজে সংরক্ষণ করা যায়নি।";}});
   $("historyFilter").addEventListener("input",renderHistory);$("reportFilter").addEventListener("input",renderReports);
   $("miniHistoryFilter").addEventListener("input",renderMiniHistory);
+  $("miniHistoryRows").addEventListener("click",e=>{const item=e.target.closest("[data-mini-lookup]");if(!item)return;if(isMobileLayout())setMobileView("lookup");$("phone").value=item.dataset.miniLookup;lookup($("phone").value,false);});
+  $("miniExportHistoryBtn").addEventListener("click",()=> $("exportHistoryBtn").click());
+  $("settingsThemeBtn").addEventListener("click",()=> $("themeBtn").click());
+  $("settingsLanguageBtn").addEventListener("click",()=> $("languageBtn").click());
+  $("autoSaveBtn").addEventListener("click",()=>{localStorage.setItem(KEYS.autoSaveHistory,String(!autoSaveEnabled()));updateAutoSavePreference();});
+
   document.querySelectorAll("[data-mini-period]").forEach(btn=>btn.addEventListener("click",()=>{miniPeriod=btn.dataset.miniPeriod;document.querySelectorAll("[data-mini-period]").forEach(b=>b.classList.toggle("active",b===btn));renderMiniHistory();}));
   $("miniClearHistoryBtn").addEventListener("click",()=>{if(askConfirm("সার্চ হিস্ট্রি মুছে ফেলবেন?")){write(KEYS.history,[]);renderAll();}});
   $("historyRows").addEventListener("click",e=>{const lookupBtn=e.target.closest("[data-history-lookup]"),del=e.target.closest("[data-history-delete]");if(lookupBtn){$("phone").value=lookupBtn.dataset.historyLookup;lookup($("phone").value,false);if(isMobileLayout())setMobileView("lookup");$("result").scrollIntoView({behavior:"smooth",block:"nearest"});}if(del){const list=read(KEYS.history);list.splice(Number(del.dataset.historyDelete),1);write(KEYS.history,list);renderAll();}});
@@ -183,14 +200,14 @@
   document.querySelectorAll("[data-new-batch]").forEach(button=>button.addEventListener("click",()=>setMobileView("tools","batch")));
   $("batchExportBtn").addEventListener("click",()=>exportCsv("number-lookup-batch.csv",[["input","normalized_number","valid_format","estimated_operator"],...batchResults.map(x=>[x.input,x.number,x.valid?"yes":"no",x.operator])]));
   $("batchFile").addEventListener("change",async e=>{const file=e.target.files&&e.target.files[0];if(!file)return;try{$("batchInput").value=await file.text();$("batchMessage").textContent=file.name+" ইমপোর্ট হয়েছে।";}catch(_){$("batchMessage").textContent="ফাইলটি পড়া যায়নি।";}e.target.value="";});
-  $("backupBtn").addEventListener("click",()=>{const data={app:"Number Lookup BD",version:2,exportedAt:new Date().toISOString(),history:read(KEYS.history),reports:read(KEYS.reports),preferences:{theme:localStorage.getItem(KEYS.theme)||"dark",language:localStorage.getItem(KEYS.language)||"bn"}};download("number-lookup-backup.json",JSON.stringify(data,null,2));$("privacyMessage").textContent="ব্যাকআপ ফাইল তৈরি হয়েছে। নিরাপদ জায়গায় রাখুন।";});
-  $("restoreFile").addEventListener("change",async e=>{const file=e.target.files&&e.target.files[0];if(!file)return;try{if(file.size>5*1024*1024)throw new Error("too-large");const data=JSON.parse(await file.text());if(!data||!Array.isArray(data.history)||!Array.isArray(data.reports))throw new Error("invalid");if(data.app&&data.app!=="Number Lookup BD")throw new Error("wrong-app");const cleanHistory=data.history.filter(x=>x&&typeof x==="object"&&typeof x.number==="string"&&/^01[3-9]\d{8}$/.test(x.number)).map(x=>({number:x.number,formatted:"+880 "+x.number.slice(1,5)+"-"+x.number.slice(5,8)+"-"+x.number.slice(8),valid:true,operator:rangeInfo(x.number),createdAt:typeof x.createdAt==="string"&&!Number.isNaN(Date.parse(x.createdAt))?x.createdAt:new Date().toISOString()})).slice(0,100);const cleanReports=data.reports.filter(x=>x&&typeof x==="object"&&typeof x.number==="string"&&/^01[3-9]\d{8}$/.test(x.number)&&typeof x.type==="string").map(x=>({id:typeof x.id==="string"?x.id:Date.now()+"-"+Math.random().toString(36).slice(2,7),number:x.number,type:x.type.slice(0,100),details:typeof x.details==="string"?x.details.slice(0,240):"",createdAt:typeof x.createdAt==="string"&&!Number.isNaN(Date.parse(x.createdAt))?x.createdAt:new Date().toISOString()})).slice(-500);if(!askConfirm("ব্যাকআপের বৈধ হিস্ট্রি ও রিপোর্ট বর্তমান লোকাল ডেটার সঙ্গে যোগ করবেন?"))return;write(KEYS.history,[...cleanHistory,...read(KEYS.history)].slice(0,100));write(KEYS.reports,[...cleanReports,...read(KEYS.reports)].slice(-500));if(data.preferences){if(["dark","light"].includes(data.preferences.theme))applyTheme(data.preferences.theme);if(["bn","en"].includes(data.preferences.language))applyLanguage(data.preferences.language);}renderAll();$("privacyMessage").textContent="ব্যাকআপ রিস্টোর হয়েছে। অবৈধ রেকর্ড বাদ দেওয়া হয়েছে।";}catch(_){$("privacyMessage").textContent="ব্যাকআপ ফাইলটি সঠিক ফরম্যাটে নেই, অন্য অ্যাপের, অথবা ৫ MB-এর বেশি।";}finally{e.target.value="";}});
-  $("clearAllBtn").addEventListener("click",()=>{if(askConfirm("সার্চ হিস্ট্রি, রিপোর্ট ও পছন্দসহ সব লোকাল ডেটা মুছে ফেলবেন? এই কাজ ফিরিয়ে নেওয়া যাবে না।")){Object.values(KEYS).forEach(k=>localStorage.removeItem(k));lastResult=null;renderAll();$("result").hidden=true;document.documentElement.lang="bn";document.documentElement.dataset.theme="dark";$("languageBtn").textContent="EN";$("themeBtn").textContent="☼";$("phone").placeholder="01XXXXXXXXX বা +8801XXXXXXXXX";$("historyFilter").placeholder="নম্বর দিয়ে খুঁজুন…";$("reportFilter").placeholder="নম্বর বা রিপোর্টের ধরন দিয়ে খুঁজুন…";document.querySelectorAll("[data-i18n]").forEach(el=>{const val=translations.bn[el.dataset.i18n];if(val!==undefined)el.innerHTML=val;});renderAll();$("privacyMessage").textContent="এই ওয়েব অ্যাপের লোকাল ডেটা ও পছন্দ মুছে ফেলা হয়েছে।";}});
+  $("backupBtn").addEventListener("click",()=>{const data={app:"Number Lookup BD",version:2,exportedAt:new Date().toISOString(),history:read(KEYS.history),reports:read(KEYS.reports),preferences:{theme:localStorage.getItem(KEYS.theme)||"dark",language:localStorage.getItem(KEYS.language)||"bn",autoSaveHistory:autoSaveEnabled()}};download("number-lookup-backup.json",JSON.stringify(data,null,2));$("privacyMessage").textContent="ব্যাকআপ ফাইল তৈরি হয়েছে। নিরাপদ জায়গায় রাখুন।";});
+  $("restoreFile").addEventListener("change",async e=>{const file=e.target.files&&e.target.files[0];if(!file)return;try{if(file.size>5*1024*1024)throw new Error("too-large");const data=JSON.parse(await file.text());if(!data||!Array.isArray(data.history)||!Array.isArray(data.reports))throw new Error("invalid");if(data.app&&data.app!=="Number Lookup BD")throw new Error("wrong-app");const cleanHistory=data.history.filter(x=>x&&typeof x==="object"&&typeof x.number==="string"&&/^01[3-9]\d{8}$/.test(x.number)).map(x=>({number:x.number,formatted:"+880 "+x.number.slice(1,5)+"-"+x.number.slice(5,8)+"-"+x.number.slice(8),valid:true,operator:rangeInfo(x.number),createdAt:typeof x.createdAt==="string"&&!Number.isNaN(Date.parse(x.createdAt))?x.createdAt:new Date().toISOString()})).slice(0,100);const cleanReports=data.reports.filter(x=>x&&typeof x==="object"&&typeof x.number==="string"&&/^01[3-9]\d{8}$/.test(x.number)&&typeof x.type==="string").map(x=>({id:typeof x.id==="string"?x.id:Date.now()+"-"+Math.random().toString(36).slice(2,7),number:x.number,type:x.type.slice(0,100),details:typeof x.details==="string"?x.details.slice(0,240):"",createdAt:typeof x.createdAt==="string"&&!Number.isNaN(Date.parse(x.createdAt))?x.createdAt:new Date().toISOString()})).slice(-500);if(!askConfirm("ব্যাকআপের বৈধ হিস্ট্রি ও রিপোর্ট বর্তমান লোকাল ডেটার সঙ্গে যোগ করবেন?"))return;write(KEYS.history,[...cleanHistory,...read(KEYS.history)].slice(0,100));write(KEYS.reports,[...cleanReports,...read(KEYS.reports)].slice(-500));if(data.preferences){if(["dark","light"].includes(data.preferences.theme))applyTheme(data.preferences.theme);if(["bn","en"].includes(data.preferences.language))applyLanguage(data.preferences.language);if(typeof data.preferences.autoSaveHistory==="boolean")localStorage.setItem(KEYS.autoSaveHistory,String(data.preferences.autoSaveHistory));}updateAutoSavePreference();renderAll();$("privacyMessage").textContent="ব্যাকআপ রিস্টোর হয়েছে। অবৈধ রেকর্ড বাদ দেওয়া হয়েছে।";}catch(_){$("privacyMessage").textContent="ব্যাকআপ ফাইলটি সঠিক ফরম্যাটে নেই, অন্য অ্যাপের, অথবা ৫ MB-এর বেশি।";}finally{e.target.value="";}});
+  $("clearAllBtn").addEventListener("click",()=>{if(askConfirm("সার্চ হিস্ট্রি, রিপোর্ট ও পছন্দসহ সব লোকাল ডেটা মুছে ফেলবেন? এই কাজ ফিরিয়ে নেওয়া যাবে না।")){Object.values(KEYS).forEach(k=>localStorage.removeItem(k));lastResult=null;renderAll();$("result").hidden=true;document.documentElement.lang="bn";document.documentElement.dataset.theme="dark";$("languageBtn").textContent="EN";$("themeBtn").textContent="☼";$("phone").placeholder="01XXXXXXXXX বা +8801XXXXXXXXX";$("historyFilter").placeholder="নম্বর দিয়ে খুঁজুন…";$("reportFilter").placeholder="নম্বর বা রিপোর্টের ধরন দিয়ে খুঁজুন…";document.querySelectorAll("[data-i18n]").forEach(el=>{const val=translations.bn[el.dataset.i18n];if(val!==undefined)el.innerHTML=val;});renderAll();updateAutoSavePreference();$("privacyMessage").textContent="এই ওয়েব অ্যাপের লোকাল ডেটা ও পছন্দ মুছে ফেলা হয়েছে।";}});
   $("themeBtn").addEventListener("click",()=>applyTheme((localStorage.getItem(KEYS.theme)||"dark")==="dark"?"light":"dark"));
   $("languageBtn").addEventListener("click",()=>applyLanguage((localStorage.getItem(KEYS.language)||"bn")==="bn"?"en":"bn"));
   document.addEventListener("keydown",e=>{if(e.altKey&&e.key.toLowerCase()==="k"){e.preventDefault();$("phone").focus();}if(e.altKey&&e.key.toLowerCase()==="h"){e.preventDefault();$("historyFilter").focus();}if(e.altKey&&e.key.toLowerCase()==="b"){e.preventDefault();$("batchInput").focus();}});
   window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();installPrompt=e;$("installBtn").hidden=false;});
   $("installBtn").addEventListener("click",async()=>{if(!installPrompt)return;installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;$("installBtn").hidden=true;});
   if("serviceWorker" in navigator && /^https?:$/.test(location.protocol)){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));}
-  applyTheme(localStorage.getItem(KEYS.theme)||"dark");applyLanguage(localStorage.getItem(KEYS.language)||"bn");renderAll();
+  applyTheme(localStorage.getItem(KEYS.theme)||"dark");applyLanguage(localStorage.getItem(KEYS.language)||"bn");updateAutoSavePreference();renderAll();
 })();
