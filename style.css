@@ -430,3 +430,36 @@ html{scroll-padding-top:14px}
  body[data-active-view="settings"] #settingsSection .preference-copy small{font-size:6px}
  body[data-active-view="settings"] #settingsSection .preference-select{font-size:7px;padding:7px 6px}
 }
+
+
+/* Optional splash screen (mockup screen 1), available from Tools */
+.splash-screen{display:none;position:relative;overflow:hidden;border:1px solid #12452e;background:radial-gradient(ellipse at 50% 45%,#07371e 0, #020805 48%,#010302 100%);color:#d9ffe9}
+.splash-screen:before{content:"";position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(#00ff8812 1px,transparent 1px),linear-gradient(90deg,#00ff8812 1px,transparent 1px);background-size:23px 23px;mask-image:linear-gradient(to bottom,transparent,#000 30%,#000 75%,transparent)}
+.splash-code{position:absolute;left:12px;right:12px;top:20px;color:#1e633e;font-size:7px;letter-spacing:.12em;text-align:center}
+.splash-mark{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;width:92px;height:102px;clip-path:polygon(25% 0,75% 0,100% 25%,100% 75%,75% 100%,25% 100%,0 75%,0 25%);background:#00ff8820;color:#00ff88;text-shadow:0 0 16px #00ff88;margin-bottom:20px}
+.splash-mark:before{content:"";position:absolute;inset:2px;clip-path:inherit;background:#020805;z-index:0}
+.splash-mark b,.splash-mark small{position:relative;z-index:1}
+.splash-mark b{font-size:35px;letter-spacing:-.08em;line-height:1}
+.splash-mark small{font-size:9px;letter-spacing:.3em;margin-top:5px}
+.splash-screen h1{position:relative;font-size:clamp(19px,5vw,27px);letter-spacing:.04em;margin:0;text-align:center;color:#00ff88}
+.splash-screen p{position:relative;font-size:8px;letter-spacing:.2em;color:#6c9d81;margin:8px 0 26px}
+.splash-loader{position:relative;width:min(190px,70%);height:5px;background:#102d1d;border:1px solid #17613c;overflow:hidden}
+.splash-loader span{display:block;height:100%;width:62%;background:#00ff88;box-shadow:0 0 12px #00ff88;animation:splashLoad 1.8s ease-in-out infinite alternate}
+.splash-status{position:relative;color:#00ff88;font-size:7px;letter-spacing:.1em;margin-top:13px}
+.splash-enter{position:relative;margin-top:32px;display:flex;align-items:center;justify-content:space-between;gap:24px;min-width:175px;padding:12px 15px;border:1px solid #00ff88;background:#00ff8810;color:#00ff88;font:700 10px ui-monospace,monospace;letter-spacing:.08em;cursor:pointer}
+.splash-enter:hover{background:#00ff8820;box-shadow:0 0 18px #00ff8825}
+.splash-privacy{position:relative;max-width:260px;text-align:center;font-size:7px;color:#52675a;letter-spacing:.08em;margin-top:20px;line-height:1.6}
+@keyframes splashLoad{from{width:18%}to{width:92%}}
+/* Buttons rendered as history rows should remain borderless cards */
+.mini-history-entry{border:0;border-bottom:1px solid #10301e;border-radius:0;appearance:none;font-size:inherit;line-height:inherit}
+.mini-export-btn{font-family:inherit;font-size:8px;font-weight:700}
+.preference-select{font-family:inherit;font-size:8px;font-weight:700}
+.back-to-tools{font-family:inherit;font-size:9px;font-weight:700}
+@media(max-width:700px){
+ body[data-active-view="splash"] .topbar{display:none!important}
+ body[data-active-view="splash"] #splashScreen{display:flex!important;min-height:calc(100svh - 75px);flex-direction:column;align-items:center;justify-content:center;padding:48px 20px 35px;text-align:center;margin:8px 0 20px}
+ body[data-active-view="splash"] .mini-nav{display:none!important}
+ body[data-active-view="splash"] .app-shell{padding-bottom:0}
+ body[data-active-view="splash"] .app-shell main{padding-bottom:0}
+}
+@media(prefers-reduced-motion:reduce){.splash-loader span{animation:none;width:70%}}
